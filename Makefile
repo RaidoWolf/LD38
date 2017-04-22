@@ -18,7 +18,7 @@
 
 # NOTE: If you need to use deployment in this file, make sure to set the
 # following environment variables before running make:
-# 
+#
 # ld38_remote_production: the RSync remote for production deployment
 # ld38_remote_development: the RSync remote for development deployment
 
@@ -46,6 +46,9 @@ SYNC_DEVELOPMENT_FLAGS = --exclude .DS_Store --exclude error_log
 JS_DEPENDENCY_MANAGER = bower
 JS_DEPENDENCY_MANAGER_INSTALL_FLAGS =
 JS_DEPENDENCY_MANAGER_UPDATE_FLAGS =
+JS_SERVER_DEPENDENCY_MANAGER = npm
+JS_SERVER_DEPENDENCY_MANAGER_INSTALL_FLAGS =
+JS_SERVER_DEPENDENCY_MANAGER_UPDATE_FLAGS =
 
 # FUNCTIONS
 FILTER_OUT_MATCH = $(foreach v,$(2),$(if $(findstring $(1),$(v)),,$(v)))
@@ -137,7 +140,7 @@ CSS_MINIFY_FILES = $(filter-out %.min.css $(MINIFY_EXCLUDE), $(wildcard \
 ))
 
 # locate all minified CSS files (or would-be minified files)
-CSS_MINIFIED = $(CSS_FILES:.css=.min.css)
+CSS_MINIFIED = $(CSS_MINIFY_FILES:.css=.min.css)
 
 # locate javascript files for minifying
 JS_MINIFY_FILES = $(JS_TRANSPILER_TRANSPILED) $(filter-out $(MINIFY_EXCLUDE), $(wildcard \
@@ -172,9 +175,9 @@ prepare:
 	@echo '==> Installing Dependencies...'
 	$(MAKE) install-deps
 	@echo '==> Removing Spaces From Directory Names...'
-	find src -name "* *" -type d -print0 | xargs -0 rename 's/ /_/g'
+	find src -depth -name "* *" -type d -execdir rename ' ' '_' "{}" \;
 	@echo '==> Removing Spaces From File Names...'
-	find src -name "* *" -type f -print0 | xargs -0 rename 's/ /_/g'
+	find src -depth -name "* *" -type f -execdir rename ' ' '_' "{}" \;
 	@echo
 
 # target: test                  - run a test of the build system.
@@ -343,7 +346,7 @@ publish-dev:
 
 # target: install-deps          - install library dependencies
 .PHONY: install-deps
-install-deps: install-js-deps
+install-deps: install-js-deps install-js-serv-deps
 
 # target: install-js-deps       - install Javascript library dependencies
 .PHONY: install-js-deps
@@ -352,15 +355,29 @@ install-js-deps:
 	$(JS_DEPENDENCY_MANAGER) $(JS_DEPENDENCY_MANAGER_INSTALL_FLAGS) install
 	@echo
 
+# target: install-js-serv-deps  - install JavaScript (npm) dependencies
+.PHONY: install-js-serv-deps
+install-js-serv-deps:
+	@echo '==> Installing JavaScript Server-Side Dependencies...'
+	$(JS_SERVER_DEPENDENCY_MANAGER) $(JS_SERVER_DEPENDENCY_MANAGER_INSTALL_FLAGS) install
+	@echo
+
 # target: update-deps           - update library dependencies
 .PHONY: update-deps
-update-deps: update-js-deps update-php-deps
+update-deps: update-js-deps update-js-server-deps
 
 # target: update-js-deps        - update JavaScript library dependencies
 .PHONY: update-js-deps
 update-js-deps:
 	@echo '==> Updating JavaScript Dependencies...'
 	$(JS_DEPENDENCY_MANAGER) $(JS_DEPENDENCY_MANAGER_UPDATE_FLAGS) update
+	@echo
+
+# target: update-js-serv-deps   - update JavaScript (npm) dependencies
+.PHONY: update-js-serv-deps
+update-js-serv-deps:
+	@echo '==> Updating JavaScript Server-Side Dependencies...'
+	$(JS_SERVER_DEPENDENCY_MANAGER) $(JS_SERVER_DEPENDENCY_MANAGER_UPDATE_FLAGS) update
 	@echo
 
 # target: help                  - display this help info.

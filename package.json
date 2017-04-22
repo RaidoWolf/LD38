@@ -1,0 +1,23 @@
+{
+  "name": "ld38",
+  "version": "1.0.0",
+  "description": "Alexander Barber's Ludum Dare 38 Entry",
+  "main": "src/index.html",
+  "dependencies": {},
+  "devDependencies": {
+    "babel-preset-env" : "^1.4.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aebarber/LD38.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/aebarber/LD38/issues"
+  },
+  "homepage": "https://github.com/aebarber/LD38#readme"
+}
