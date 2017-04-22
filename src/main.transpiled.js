@@ -9,21 +9,15 @@
         }return n[o].exports;
     }var i = typeof require == "function" && require;for (var o = 0; o < r.length; o++) s(r[o]);return s;
 })({ 1: [function (require, module, exports) {
-        var game = require('./game.inc.js');
-
-        var create = function () {
+        module.exports = function () {
 
             stars = game.add.group();
 
             var sun = stars.create(game.world.width / 2 - 64, game.world.height / 2 - 64, 'sun');
             sun.scale.setTo(2, 2);
-
-            player = game.add.sprite(32, game.world.height - 150, 'player');
         };
-
-        module.exports = create;
-    }, { "./game.inc.js": 2 }], 2: [function (require, module, exports) {
-        var game = new Phaser.Game(640, 480, Phaser.AUTO, '', {
+    }, {}], 2: [function (require, module, exports) {
+        window.game = new Phaser.Game(640, 480, Phaser.AUTO, '', {
             preload: require('./preload.inc.js'),
             create: require('./create.inc.js'),
             update: require('./update.inc.js')
@@ -36,23 +30,14 @@
         game.load.image('space', 'assets/space.png');
         game.load.spritesheet('sun', 'assets/sun.png', 64, 64);
     }, { "../game.inc.js": 2 }], 4: [function (require, module, exports) {
-        var game = require('./game.inc.js');
-
-        var preload = function () {
+        module.exports = function () {
 
             // get assets
             require('./loading/environment.inc.js');
-            game.load.spritesheet('player', 'assets/player.png', 24, 32);
         };
-
-        module.exports = preload;
-    }, { "./game.inc.js": 2, "./loading/environment.inc.js": 3 }], 5: [function (require, module, exports) {
-        var game = require('./game.inc.js');
-
-        var update = function () {};
-
-        module.exports = update;
-    }, { "./game.inc.js": 2 }], 6: [function (require, module, exports) {
+    }, { "./loading/environment.inc.js": 3 }], 5: [function (require, module, exports) {
+        module.exports = function () {};
+    }, {}], 6: [function (require, module, exports) {
         /**
          * ##################
          * # LUDUM DARE 38! #
