@@ -18,6 +18,18 @@ Description
 
 Let it begin!
 
+This will be be a 2D single-player game wherein you will play as a small planet
+orbiting a star, and the planet will be "attacked" by a variety of threats from
+out in the vast universe. These attacks will occur in waves, and during the
+intervening time you will be able to prepare yourself for the next attack. You
+need to use and upgrade technology to defend your small and fragile planet from
+the harsh and aggressive universe for as long as you can. Time is your primary
+score, but skill and efficiency will earn you points that will allow you to
+obtain new tools to defend your planet for just that much longer.
+
+The game will be a web-based game written primarily in JavaScript. It should be
+able to run in any up-to-date browser.
+
 Supported Browsers
 ------------------
 
