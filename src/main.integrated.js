@@ -8,12 +8,6 @@ var game = new Phaser.Game(640, 480, Phaser.AUTO, '', {
 module.exports = game;
 
 },{}],2:[function(require,module,exports){
-var game = require('../game.inc.js');
-
-game.load.image('floor', 'assets/floor.png');
-game.load.image('boulder', 'assets/boulder.png');
-
-},{"../game.inc.js":1}],3:[function(require,module,exports){
 /**
  * ##################
  * # LUDUM DARE 38! #
@@ -22,34 +16,6 @@ game.load.image('boulder', 'assets/boulder.png');
 
 var game = require('./js/game.inc.js');
 
-function preload () {
+//do some stuff now!
 
-    // get assets
-    require('./js/loading/environment.inc.js');
-    game.load.spritesheet('player', 'assets/player.png', 24, 32);
-
-}
-
-function create () {
-
-    // start up the game
-    game.physics.startSystem(Phaser.Physics.ARCADE);
-
-    tangible = game.add.group();
-    tangible.enableBody = true;
-
-    var floor = platforms.create(0, game.world.height - 64, 'floor');
-    floor.scale.setTo(8, 8);
-    floor.body.immovable = true;
-
-    player = game.add.sprite(32, game.world.height - 150, 'player');
-
-}
-
-function update () {
-
-    // the good old update pattern. this is where time passes.
-
-}
-
-},{"./js/game.inc.js":1,"./js/loading/environment.inc.js":2}]},{},[3]);
+},{"./js/game.inc.js":1}]},{},[2]);
