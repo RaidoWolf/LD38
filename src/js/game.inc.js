@@ -1,7 +1,7 @@
 var game = new Phaser.Game(640, 480, Phaser.AUTO, '', {
-    preload: preload,
-    create: create,
-    update: update
+    preload: require('./preload.inc.js'),
+    create: require('./create.inc.js'),
+    update: require('./update.inc.js')
 });
 
 module.exports = game;
