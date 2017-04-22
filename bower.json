@@ -1,0 +1,18 @@
+{
+  "name": "LD38",
+  "homepage": "https://github.com/aebarber/LD38",
+  "authors": [
+    "Alexander Barber <dangerbarber@gmail.com>"
+  ],
+  "description": "Alexander Barber's Ludum Dare 38 Entry",
+  "main": "src/index.html",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
