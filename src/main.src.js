@@ -4,6 +4,5 @@
  * ##################
  */
 
-var game = require('./js/game.inc.js');
-
-//do some stuff now!
+// initialize the main game object
+import game from './js/game.inc.js';

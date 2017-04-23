@@ -1,4 +1,6 @@
-module.exports = function () {
+import ASmallWorld from './class/ASmallWorld.js';
+
+export default function () {
 
     // start the physics system
     game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -14,11 +16,6 @@ module.exports = function () {
     sun.animations.play('default', 10, true);
 
     // create and animate the world (the small one)
-    window.asmallworld = game.add.sprite(game.world.centerX, game.world.centerY - gameScaleBase * 64, 'asmallworld');
-    asmallworld.anchor.setTo(0.5, 0.5);
-    asmallworld.scale.setTo(gameScaleBase, gameScaleBase);
-    asmallworld.animations.add('default');
-    asmallworld.animations.play('default', 1, true);
-    game.physics.arcade.enable(asmallworld);
+    window.asmallworld = new ASmallWorld(game.world.centerX, game.world.centerY - gameScaleBase * 64);
 
-};
+}

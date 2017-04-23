@@ -11,10 +11,9 @@
 
 # JAVASCRIPT BUILD PIPELINE
 #
-#                  *.inc.js
-#                     |
-# *.src.js ---->[JS_INCLUDER]-> *.integrated.js ->[JS_TRANSPILER]-> *.transpiled.js ->[JS_MINIFIER]-> *.min.js
-# *.single.js ----------------------------------->[JS_TRANSPILER]-> *.transpiled.js ->[JS_MINIFIER]-> *.min.js
+#                      *.js
+#                       |
+# main.src.js ---->[JS_BUNDLER]-> *.js ->[JS_MINIFIER]-> *.min.js
 
 # NOTE: If you need to use deployment in this file, make sure to set the
 # following environment variables before running make:
@@ -25,16 +24,14 @@
 # CONFIG
 CSS_MINIFIER = yuicompressor
 CSS_MINIFIER_FLAGS =
-JS_MINIFIER = closure-compiler
-JS_MINIFIER_FLAGS =
 SCSS_COMPILER = scss
 SCSS_COMPILER_FLAGS =
-JS_INCLUDER = browserify
-JS_INCLUDER_FLAGS =
-JS_TRANSPILER = babel
-JS_TRANSPILER_FLAGS =
-COMPILE_EXCLUDE = src/lib/% src/ui/bootstrap/% src/ui/jquery-ui/%
-MINIFY_EXCLUDE = src/lib/% src/ui/bootstrap/% src/ui/jquery-ui/%
+JS_BUNDLER = ./node_modules/webpack/bin/webpack.js
+JS_BUNDLER_FLAGS =
+JS_BUNDLED = src/main.js
+JS_MINIFIER = closure-compiler
+JS_MINIFIER_FLAGS =
+MINIFY_EXCLUDE = src/lib/%
 REMOTE_SYNCER = rsync
 REMOTE_SYNCER_FLAGS = -avlt --progress --delete --delete-during
 LOCAL_PRODUCTION = ./src/
@@ -82,50 +79,6 @@ SCSS_INCLUDES = $(filter-out $(COMPILE_EXCLUDE) $(SCSS_FILES), $(wildcard \
 	src/**/**/**/**/**/**/**/**/*.scss \
 ))
 
-JS_INCLUDER_FILES = $(filter-out $(COMPILE_EXCLUDE), $(wildcard \
-	src/*.src.js \
-	src/**/*.src.js \
-	src/**/**/*.src.js \
-	src/**/**/**/*.src.js \
-	src/**/**/**/**/*.src.js \
-	src/**/**/**/**/**/*.src.js \
-	src/**/**/**/**/**/**/*.src.js \
-	src/**/**/**/**/**/**/**/*.src.js \
-	src/**/**/**/**/**/**/**/**/*.src.js \
-))
-
-# locate all compiled (with includes) JavaScript files (or would-be compiled files)
-JS_INCLUDER_COMPILED = $(JS_INCLUDER_FILES:.src.js=.integrated.js)
-
-# locate all JavaScript files that are to be included by the includer.
-JS_INCLUDES = $(filter-out $(COMPILE_EXCLUDE), $(wildcard \
-	src/*.inc.js \
-	src/**/*.inc.js \
-	src/**/**/*.inc.js \
-	src/**/**/**/*.inc.js \
-	src/**/**/**/**/*.inc.js \
-	src/**/**/**/**/**/*.inc.js \
-	src/**/**/**/**/**/**/*.inc.js \
-	src/**/**/**/**/**/**/**/*.inc.js \
-	src/**/**/**/**/**/**/**/**/*.inc.js \
-))
-
-# locate all "single" javascript files for transpiling
-JS_SINGLE = $(filter-out $(COMPILE_EXCLUDE) $(JS_INCLUDES) $(JS_INCLUDER_FILES), $(wildcard \
-	src/*.single.js \
-	src/**/*.single.js \
-	src/**/**/*.single.js \
-	src/**/**/**/*.single.js \
-	src/**/**/**/**/*.single.js \
-	src/**/**/**/**/**/*.single.js \
-	src/**/**/**/**/**/**/*.single.js \
-	src/**/**/**/**/**/**/**/*.single.js \
-	src/**/**/**/**/**/**/**/**/*.single.js \
-))
-
-# locate all transpiled JavaScript files (or would-be transpiled files)
-JS_TRANSPILER_TRANSPILED = $(JS_INCLUDER_COMPILED:.integrated.js=.transpiled.js) $(JS_SINGLE:.single.js=.transpiled.js)
-
 # locate all CSS files except those under MINIFY_EXCLUDE directories or .min.css files
 CSS_MINIFY_FILES = $(filter-out %.min.css $(MINIFY_EXCLUDE), $(wildcard \
 	src/*.css \
@@ -142,21 +95,8 @@ CSS_MINIFY_FILES = $(filter-out %.min.css $(MINIFY_EXCLUDE), $(wildcard \
 # locate all minified CSS files (or would-be minified files)
 CSS_MINIFIED = $(CSS_MINIFY_FILES:.css=.min.css)
 
-# locate javascript files for minifying
-JS_MINIFY_FILES = $(JS_TRANSPILER_TRANSPILED) $(filter-out $(MINIFY_EXCLUDE), $(wildcard \
-	src/*.transpiled.js \
-	src/**/*.transpiled.js \
-	src/**/**/*.transpiled.js \
-	src/**/**/**/*.transpiled.js \
-	src/**/**/**/**/*.transpiled.js \
-	src/**/**/**/**/**/*.transpiled.js \
-	src/**/**/**/**/**/**/*.transpiled.js \
-	src/**/**/**/**/**/**/**/*.transpiled.js \
-	src/**/**/**/**/**/**/**/**/*.transpiled.js \
-))
-
-# locate all minified JavaScript files (or would-be minified files)
-JS_MINIFIED = $(JS_MINIFY_FILES:.transpiled.js=.min.js)
+# locate all minified bundled JS files (or would be minified files)
+JS_MINIFIED = $(JS_BUNDLED:.js=.min.js)
 
 # target: all                   - build all files.
 .PHONY: all
@@ -180,28 +120,13 @@ prepare:
 	find src -depth -name "* *" -type f -execdir rename ' ' '_' "{}" \;
 	@echo
 
-# target: test                  - run a test of the build system.
-.PHONY: test
-test: test-compile test-minify
-
 # target: compile               - compile all compilable source code.
 .PHONY: compile
-compile: # recursive because of needed build order again
-	$(MAKE) scss-compile
-	$(MAKE) js-include
-	$(MAKE) js-transpile
-
-# target: test-compile          - show files that would be compiled
-.PHONY: test-compile
-test-compile: test-scss-compile test-js-include test-js-transpile
+compile: scss-compile js-bundle
 
 # target: scss-compile          - compile all SCSS to CSS.
 .PHONY: scss-compile
 scss-compile: $(SCSS_FILES) $(SCSS_COMPILED)
-
-# target: test-scss-compile     - show SCSS files that would be compiled
-.PHONY: test-scss-compile
-test-scss-compile: print-SCSS_FILES
 
 # target: %.css                 - compile individual SCSS file.
 %.css: %.scss $(SCSS_INCLUDES) # always recompile every SCSS file if ANY dependency file changes
@@ -209,55 +134,20 @@ test-scss-compile: print-SCSS_FILES
 	$(SCSS_COMPILER) $(SCSS_COMPILER_FLAGS) $< > $@
 	@echo
 
-# target: js-include            - compile includes into pre-defined JavaScript files.
-.PHONY: js-include
-js-include: $(JS_INCLUDER_FILES) $(JS_INCLUDER_COMPILED)
-
-# target: test-js-include       - show JavaScript files that would be integrated.
-.PHONY: test-js-include
-test-js-include: print-JS_INCLUDER_FILES
-
-# target: %.integrated.js       - compile includes into individual JavaScript file.
-%.integrated.js: %.src.js $(JS_INCLUDES) # always recompile every pre-defined JavaScript file when ANY dependency file changes
-	@echo '==> Integrating $<'
-	$(JS_INCLUDER) $(JS_INCLUDER_FLAGS) $< -o $@
-	@echo
-
-# target: js-transpile          - transpile modern JavaScript into a more universally supported version
-.PHONY: js-transpile
-js-transpile: $(JS_INCLUDER_COMPILED) $(JS_SINGLE) $(JS_TRANSPILER_TRANSPILED)
-
-# target: test-js-transpile     - show JavaScript files that would be transpiled.
-.PHONY: test-js-transpile
-test-js-transpile: print-JS_INCLUDER_COMPILED print-JS_SINGLE
-
-# target: %.transpiled.js       - transpile individual JavaScript file into a more universally supported version
-%.transpiled.js: %.integrated.js
-	@echo '==> Transpiling $<'
-	$(JS_TRANSPILER) $(JS_TRANSPILER_FLAGS) $< > $@
-	@echo
-%.transpiled.js: %.single.js
-	@echo '==> Transpiling $<'
-	$(JS_TRANSPILER) $(JS_TRANSPILER_FLAGS) $< > $@
+# target: js-bundle             - bundle all JavaScript into bundles.
+.PHONY: js-bundle
+js-bundle:
+	@echo '==> Bundling JavaScript...'
+	$(JS_BUNDLER) $(JS_BUNDLER_FLAGS)
 	@echo
 
 # target: minify                - minify CSS and JavaScript files.
 .PHONY: minify
-minify: # recursive because whatever. compile is like this for a reason, so...
-	$(MAKE) minify-css
-	$(MAKE) minify-js
-
-# target: test-minify           - show the files that would be minified.
-.PHONY: test-minify
-test-minify: test-minify-css test-minify-js
+minify: minify-css minify-js
 
 # target: minify-css            - minify CSS files.
 .PHONY: minify-css
 minify-css: $(CSS_MINIFY_FILES) $(CSS_MINIFIED)
-
-# target: test-minify-css       - show CSS files that would be minified.
-.PHONY: test-minify-css
-test-minify-css: print-CSS_MINIFY_FILES
 
 # target: %.min.css             - minify individual CSS file.
 %.min.css: %.css
@@ -267,14 +157,10 @@ test-minify-css: print-CSS_MINIFY_FILES
 
 # target: minify-js             - minify JavaScript files.
 .PHONY: minify-js
-minify-js: $(JS_MINIFY_FILES) $(JS_MINIFIED)
-
-# target: test-minify-js        - show JavaScript files that would be minified.
-.PHONY: test-minify-js
-test-minify-js: print-JS_MINIFY_FILES
+minify-js: $(JS_BUNDLED) $(JS_MINIFIED)
 
 # target: %.min.js              - minify individual JavaScript file.
-%.min.js: %.transpiled.js
+%.min.js: %.js
 	@echo '==> Minifying $<'
 	$(JS_MINIFIER) $(JS_MINIFIER_FLAGS) $< > $@
 	@echo
@@ -303,7 +189,7 @@ clean-minified-js:
 
 # target: clean-compiled        - delete all compiled SCSS and JavaScript.
 .PHONY: clean-compiled
-clean-compiled: clean-compiled-scss clean-included-js clean-transpiled-js
+clean-compiled: clean-compiled-scss clean-bundled-js
 
 # target: clean-compiled-scss   - delete all compiled SCSS files (the CSS equivalents).
 .PHONY: clean-compiled-scss
@@ -312,18 +198,11 @@ clean-compiled-scss:
 	rm -fv $(SCSS_COMPILED)
 	@echo
 
-# target: clean-compiled-js     - delete all compiled JavaScript files.
-.PHONY: clean-included-js
-clean-included-js:
-	@echo '==> Removing Compiled JavaScript Files...'
-	rm -fv $(JS_INCLUDER_COMPILED)
-	@echo
-
-# target: clean-transpiled-js   - delete all transpiled JavaScript files.
-.PHONY: clean-transpiled-js
-clean-transpiled-js:
-	@echo '==> Removing Transpiled JavaScript Files...'
-	rm -fv $(JS_TRANSPILER_TRANSPILED)
+# target: clean-bundled-js     - delete all bundled JavaScript files.
+.PHONY: clean-bundled-js
+clean-bundled-js:
+	@echo '==> Removing Bundled JavaScript Files...'
+	rm -fv $(JS_BUNDLED)
 	@echo
 
 # target: publish-all           - publish current version to both development-site and production-site.
