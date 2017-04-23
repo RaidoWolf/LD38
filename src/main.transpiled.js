@@ -27,7 +27,7 @@
             asmallworld.animations.play('default', 1, true);
         };
     }, {}], 2: [function (require, module, exports) {
-        window.game = new Phaser.Game(640, 480, Phaser.AUTO, '', {
+        window.game = new Phaser.Game(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio, Phaser.AUTO, '', {
             preload: require('./preload.inc.js'),
             create: require('./create.inc.js'),
             update: require('./update.inc.js')
