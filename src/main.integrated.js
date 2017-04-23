@@ -10,14 +10,14 @@ module.exports = function () {
     // create and animate the sun
     window.sun = game.add.sprite(game.world.centerX, game.world.centerY, 'sun');
     sun.anchor.setTo(0.5, 0.5);
-    sun.scale.setTo(gameScaleBase * 2, gameScaleBase * 2);
+    sun.scale.setTo(gameScaleBase, gameScaleBase);
     sun.animations.add('default');
     sun.animations.play('default', 10, true);
 
     // create and animate the world (the small one)
-    window.asmallworld = game.add.sprite(game.world.centerX, game.world.centerY - gameScaleBase * 128, 'asmallworld');
+    window.asmallworld = game.add.sprite(game.world.centerX, game.world.centerY - gameScaleBase * 64, 'asmallworld');
     asmallworld.anchor.setTo(0.5, 0.5);
-    asmallworld.scale.setTo(gameScaleBase * 2, gameScaleBase * 2);
+    asmallworld.scale.setTo(gameScaleBase, gameScaleBase);
     asmallworld.animations.add('default');
     asmallworld.animations.play('default', 1, true);
     game.physics.arcade.enable(asmallworld);
@@ -26,15 +26,17 @@ module.exports = function () {
 
 },{}],2:[function(require,module,exports){
 window.game = new Phaser.Game(
-    window.innerWidth * window.devicePixelRatio,
-    window.innerHeight * window.devicePixelRatio,
-    Phaser.AUTO,
-    '',
-    {
+    window.innerWidth * window.devicePixelRatio, // game window width
+    window.innerHeight * window.devicePixelRatio, // game window height
+    Phaser.AUTO, // automatically choose renderer
+    '', // initial DOM element (take whole window)
+    { // initial game state object
         preload: require('./preload.inc.js'),
         create: require('./create.inc.js'),
         update: require('./update.inc.js')
-    }
+    },
+    false, //disable canvas transparency
+    false //disable anti-aliasing
 );
 
 window.largestDimension = window.innerWidth > window.innerHeight ? window.innerWidth * window.devicePixelRatio : window.innerHeight * window.devicePixelRatio;
