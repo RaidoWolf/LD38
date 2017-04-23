@@ -7,7 +7,7 @@ export default class Crosshair {
         var self = this;
 
         // create the sprite
-        this.sprite = game.add.sprite(-100, 100, 'crosshair-normal');
+        this.sprite = game.add.sprite(-100, -100, 'crosshair-normal');
         this.sprite.anchor.setTo(0.5, 0.5);
         this.sprite.scale.setTo(1, 1);
 

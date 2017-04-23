@@ -1,13 +1,14 @@
-class ASmallWorld {
+import OrbitalTrack from './OrbitalTrack.js';
 
-    constructor (x, y, solarSystem) {
+export default class ASmallWorld {
+
+    constructor (x, y, radius) {
+
+        x = typeof x !== 'undefined' ? x : game.world.centerX;
+        y = typeof y !== 'undefined' ? y : game.world.centerY;
 
         // create a sprite object
-        this.sprite = game.add.sprite(
-            typeof x !== 'undefined' ? x : game.world.centerX,
-            typeof y !== 'undefined' ? y : game.world.centerY,
-            'asmallworld'
-        );
+        this.sprite = game.add.sprite(x, y, 'asmallworld');
 
         // move the anchor point to the middle
         this.sprite.anchor.setTo(0.5, 0.5);
@@ -24,6 +25,10 @@ class ASmallWorld {
         game.physics.arcade.enable(this.sprite);
 
         this.weapons = [];
+
+        this.orbitalOrigin = [x, y];
+        this.orbitalPhase = 0;
+        this.initOrbitalTrack();
 
     }
 
@@ -45,19 +50,24 @@ class ASmallWorld {
         return true;
     }
 
-    moveBy (x, y) {
+    initOrbitalTrack () {
+        this.orbitalTrack = new OrbitalTrack(
+            64,
+            360,
+            this.orbitalOrigin
+        );
+    }
 
+    moveBy (x, y) {
         this.x += x;
         this.y += y;
         return true;
-
     }
 
     moveTo (x, y) {
-
         this.x = x;
         this.y = y;
-
+        return true;
     }
 
     update () {
@@ -67,8 +77,13 @@ class ASmallWorld {
             this.gameScaleBase = gameScaleBase;
         }
 
+        var newPos = this.orbitalTrack.getPoint(
+            this.orbitalPhase < 360 ?
+            this.orbitalPhase++ :
+            this.orbitalPhase = 0
+        );
+        this.moveTo(newPos[0], newPos[1]);
+
     }
 
 }
-
-export default ASmallWorld;

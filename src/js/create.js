@@ -17,7 +17,7 @@ export default function () {
     sun.animations.play('default', 10, true);
 
     // create and animate the world (the small one)
-    window.asmallworld = new ASmallWorld(game.world.centerX, game.world.centerY - gameScaleBase * 64);
+    window.asmallworld = new ASmallWorld(game.world.centerX, game.world.centerY);
 
     // create custom pointer
     window.crosshair = new Crosshair();
