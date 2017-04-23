@@ -224,6 +224,17 @@ exports.default = function () {
 
     // create and animate the world (the small one)
     window.asmallworld = new _ASmallWorld2.default(game.world.centerX, game.world.centerY - gameScaleBase * 64);
+
+    window.crosshair = game.add.sprite(0, 0, 'asmallworld');
+    crosshair.anchor.setTo(0.5, 0.5);
+    crosshair.scale.setTo(1, 1);
+    crosshair.animations.add('default');
+    crosshair.animations.play('default', 10, true);
+
+    game.input.addMoveCallback(function (pointer, x, y) {
+        crosshair.x = x;
+        crosshair.y = y;
+    });
 };
 
 var _ASmallWorld = __webpack_require__(1);
