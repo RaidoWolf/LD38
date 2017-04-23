@@ -23,6 +23,8 @@ class ASmallWorld {
         // enable arcade physics
         game.physics.arcade.enable(this.sprite);
 
+        this.weapons = [];
+
     }
 
     get x () {

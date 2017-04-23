@@ -77,17 +77,17 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _preloadInc = __webpack_require__(5);
+var _preload = __webpack_require__(5);
 
-var _preloadInc2 = _interopRequireDefault(_preloadInc);
+var _preload2 = _interopRequireDefault(_preload);
 
-var _createInc = __webpack_require__(2);
+var _create = __webpack_require__(2);
 
-var _createInc2 = _interopRequireDefault(_createInc);
+var _create2 = _interopRequireDefault(_create);
 
-var _updateInc = __webpack_require__(6);
+var _update = __webpack_require__(6);
 
-var _updateInc2 = _interopRequireDefault(_updateInc);
+var _update2 = _interopRequireDefault(_update);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -96,9 +96,9 @@ window.innerHeight * window.devicePixelRatio, // game window height
 Phaser.AUTO, // automatically choose renderer
 '', // initial DOM element (take whole window)
 { // initial game state object
-    preload: _preloadInc2.default,
-    create: _createInc2.default,
-    update: _updateInc2.default
+    preload: _preload2.default,
+    create: _create2.default,
+    update: _update2.default
 }, false, //disable canvas transparency
 false //disable anti-aliasing
 );
@@ -143,6 +143,8 @@ var ASmallWorld = function () {
 
         // enable arcade physics
         game.physics.arcade.enable(this.sprite);
+
+        this.weapons = [];
     }
 
     _createClass(ASmallWorld, [{
@@ -289,9 +291,9 @@ exports.default = function () {};
 "use strict";
 
 
-var _gameInc = __webpack_require__(0);
+var _game = __webpack_require__(0);
 
-var _gameInc2 = _interopRequireDefault(_gameInc);
+var _game2 = _interopRequireDefault(_game);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 

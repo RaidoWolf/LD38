@@ -1,6 +1,6 @@
-import preload from './preload.inc.js';
-import create from './create.inc.js';
-import update from './update.inc.js';
+import preload from './preload.js';
+import create from './create.js';
+import update from './update.js';
 
 window.game = new Phaser.Game(
     window.innerWidth * window.devicePixelRatio, // game window width

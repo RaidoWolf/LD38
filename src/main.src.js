@@ -5,4 +5,4 @@
  */
 
 // initialize the main game object
-import game from './js/game.inc.js';
+import game from './js/game.js';
