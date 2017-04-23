@@ -3,6 +3,8 @@ Ludum Dare 38
 
 My project for Ludum Dare 38
 
+[Click to view the demo!](https://dangerbarber.com/ld38/)
+
 Theme
 -----
 
@@ -29,6 +31,18 @@ obtain new tools to defend your planet for just that much longer.
 
 The game will be a web-based game written primarily in JavaScript. It should be
 able to run in any up-to-date browser.
+
+Run-Time Dependencies
+---------------------
+
+This project is built on top of the excellent Phaser (phaser-ce) HTML5 game
+engine/framework. This is the only dependency that needs to be present to run
+the game. Phaser is, like this game, licensed with the MIT license. I've
+provided a link to the license below. It can be installed using either `make`
+or `bower install` from the root of the repository.
+- [Website](https://phaser.io/)
+- [GitHub](https://github.com/photonstorm/phaser-ce/)
+- [License](https://github.com/photonstorm/phaser-ce/blob/master/license.txt)
 
 Supported Browsers
 ------------------
