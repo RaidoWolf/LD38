@@ -11,11 +11,20 @@
 })({ 1: [function (require, module, exports) {
         module.exports = function () {
 
+            // add a starry background
             window.background = game.add.tileSprite(0, 0, game.world.width, game.world.height, 'space');
+
+            // create and animate the sun
             window.sun = game.add.sprite(game.world.width / 2 - 64, game.world.height / 2 - 64, 'sun');
             sun.scale.setTo(2, 2);
             sun.animations.add('default');
-            sun.animations.play('default', 5, true);
+            sun.animations.play('default', 10, true);
+
+            // create and animate the world (the small one)
+            window.asmallworld = game.add.sprite(game.world.width / 2 - 16, game.world.height / 2 - 128, 'asmallworld');
+            asmallworld.scale.setTo(2, 2);
+            asmallworld.animations.add('default');
+            asmallworld.animations.play('default', 1, true);
         };
     }, {}], 2: [function (require, module, exports) {
         window.game = new Phaser.Game(640, 480, Phaser.AUTO, '', {
@@ -25,20 +34,21 @@
         });
 
         module.exports = game;
-    }, { "./create.inc.js": 1, "./preload.inc.js": 4, "./update.inc.js": 5 }], 3: [function (require, module, exports) {
-        var game = require('../game.inc.js');
-
+    }, { "./create.inc.js": 1, "./preload.inc.js": 5, "./update.inc.js": 6 }], 3: [function (require, module, exports) {
+        game.load.spritesheet('asmallworld', 'assets/asmallworld.png', 16, 16);
+    }, {}], 4: [function (require, module, exports) {
         game.load.image('space', 'assets/space.png');
         game.load.spritesheet('sun', 'assets/sun.png', 64, 64);
-    }, { "../game.inc.js": 2 }], 4: [function (require, module, exports) {
+    }, {}], 5: [function (require, module, exports) {
         module.exports = function () {
 
             // get assets
             require('./loading/environment.inc.js');
+            require('./loading/asmallworld.inc.js');
         };
-    }, { "./loading/environment.inc.js": 3 }], 5: [function (require, module, exports) {
+    }, { "./loading/asmallworld.inc.js": 3, "./loading/environment.inc.js": 4 }], 6: [function (require, module, exports) {
         module.exports = function () {};
-    }, {}], 6: [function (require, module, exports) {
+    }, {}], 7: [function (require, module, exports) {
         /**
          * ##################
          * # LUDUM DARE 38! #
@@ -48,5 +58,5 @@
         var game = require('./js/game.inc.js');
 
         //do some stuff now!
-    }, { "./js/game.inc.js": 2 }] }, {}, [6]);
+    }, { "./js/game.inc.js": 2 }] }, {}, [7]);
 
