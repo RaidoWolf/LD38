@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 11);
+/******/ 	return __webpack_require__(__webpack_require__.s = 19);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -77,15 +77,107 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _preload = __webpack_require__(9);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Rocket = function () {
+    function Rocket(x, y, angle, owner) {
+
+        // this is a virtual class, do not construct it.
+
+        _classCallCheck(this, Rocket);
+    }
+
+    _createClass(Rocket, [{
+        key: 'destroy',
+        value: function destroy() {
+
+            this.sprite.destroy();
+            this.live = false;
+            return true;
+        }
+    }, {
+        key: 'init',
+        value: function init(x, y, angle, owner) {
+
+            this.live = true;
+
+            this.sprite = game.add.sprite(x, y, 'rocket');
+
+            this.sprite.anchor.setTo(0.5, 0.5);
+
+            this.sprite.scale.setTo(gameScaleBase, gameScaleBase);
+            this.scale = gameScaleBase;
+
+            this.sprite.animations.add('default', this.frames);
+            this.sprite.animations.play('default', 3, true);
+
+            this.sprite.angle = angle;
+
+            game.physics.arcade.enable(this.sprite);
+            this.sprite.collideWorldBounds = false;
+
+            this.angle = angle;
+            this.owner = owner;
+            this.velocity = 50;
+        }
+    }, {
+        key: 'update',
+        value: function update() {
+
+            if (this.velocity < 300) {
+                this.velocity += 10;
+            }
+
+            this.sprite.body.velocity.x = this.velocity * gameScaleBase * Math.cos(this.angle);
+            this.sprite.body.velocity.y = this.velocity * gameScaleBase * Math.sin(this.angle);
+        }
+    }, {
+        key: 'x',
+        get: function get() {
+            return this.sprite.x;
+        },
+        set: function set(pos) {
+            this.sprite.x = pos;
+            return true;
+        }
+    }, {
+        key: 'y',
+        get: function get() {
+            return this.sprite.y;
+        },
+        set: function set(pos) {
+            this.sprite.y = pos;
+            return true;
+        }
+    }]);
+
+    return Rocket;
+}();
+
+exports.default = Rocket;
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _preload = __webpack_require__(17);
 
 var _preload2 = _interopRequireDefault(_preload);
 
-var _create = __webpack_require__(4);
+var _create = __webpack_require__(11);
 
 var _create2 = _interopRequireDefault(_create);
 
-var _update = __webpack_require__(10);
+var _update = __webpack_require__(18);
 
 var _update2 = _interopRequireDefault(_update);
 
@@ -109,7 +201,7 @@ window.gameScaleBase = largestDimension / 800;
 exports.default = window.game;
 
 /***/ }),
-/* 1 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -121,9 +213,13 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _OrbitalTrack = __webpack_require__(3);
+var _OrbitalTrack = __webpack_require__(8);
 
 var _OrbitalTrack2 = _interopRequireDefault(_OrbitalTrack);
+
+var _RocketLauncher = __webpack_require__(9);
+
+var _RocketLauncher2 = _interopRequireDefault(_RocketLauncher);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -153,7 +249,7 @@ var ASmallWorld = function () {
         // enable arcade physics
         game.physics.arcade.enable(this.sprite);
 
-        this.weapons = [];
+        this.weapon = new _RocketLauncher2.default(this);
 
         this.orbitalOrigin = [x, y];
         this.orbitalPhase = 0;
@@ -161,6 +257,11 @@ var ASmallWorld = function () {
     }
 
     _createClass(ASmallWorld, [{
+        key: 'fireWeapon',
+        value: function fireWeapon(angle) {
+            return this.weapon.fire(angle);
+        }
+    }, {
         key: 'initOrbitalTrack',
         value: function initOrbitalTrack() {
             this.orbitalTrack = new _OrbitalTrack2.default(64, 360, this.orbitalOrigin);
@@ -183,13 +284,21 @@ var ASmallWorld = function () {
         key: 'update',
         value: function update() {
 
-            if (this.gameScaleBase !== gameScaleBase) {
+            if (this.scale !== gameScaleBase) {
                 this.sprite.scale.setTo(gameScaleBase, gameScaleBase);
-                this.gameScaleBase = gameScaleBase;
+                this.scale = gameScaleBase;
             }
 
+            // orbit at 60-degrees-per-second (10 RPM)
             var newPos = this.orbitalTrack.getPoint(this.orbitalPhase < 360 ? this.orbitalPhase++ : this.orbitalPhase = 0);
             this.moveTo(newPos[0], newPos[1]);
+
+            this.weapon.update();
+        }
+    }, {
+        key: 'upgradeWeapon',
+        value: function upgradeWeapon() {
+            return this.weapon.upgrade();
         }
     }, {
         key: 'x',
@@ -217,7 +326,52 @@ var ASmallWorld = function () {
 exports.default = ASmallWorld;
 
 /***/ }),
-/* 2 */
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _Rocket2 = __webpack_require__(0);
+
+var _Rocket3 = _interopRequireDefault(_Rocket2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var BasicRocket = function (_Rocket) {
+    _inherits(BasicRocket, _Rocket);
+
+    function BasicRocket(x, y, angle, owner) {
+        _classCallCheck(this, BasicRocket);
+
+        var _this = _possibleConstructorReturn(this, (BasicRocket.__proto__ || Object.getPrototypeOf(BasicRocket)).call(this, x, y, angle, owner));
+
+        _this.baseDamage = 100; // dithers to zero at edge of blast radius
+        _this.blastRadius = 100;
+        _this.frames = [0, 1];
+
+        _this.init(x, y, angle, owner);
+
+        return _this;
+    }
+
+    return BasicRocket;
+}(_Rocket3.default);
+
+exports.default = BasicRocket;
+
+/***/ }),
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -229,7 +383,61 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _addEvent = __webpack_require__(5);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Controller = function () {
+    function Controller(cursor, player) {
+        _classCallCheck(this, Controller);
+
+        this.cursor = cursor;
+        this.player = player;
+        this.leftButtonWasDown = false;
+
+        game.input.mouse.capture = true;
+    }
+
+    _createClass(Controller, [{
+        key: "getPlayerAngleToCursor",
+        value: function getPlayerAngleToCursor() {
+
+            return Math.atan2(this.cursor.y - this.player.y, this.cursor.x - this.player.x);
+        }
+    }, {
+        key: "update",
+        value: function update() {
+
+            if (!this.leftButtonWasDown) {
+                if (game.input.activePointer.leftButton.isDown) {
+                    this.player.fireWeapon(this.getPlayerAngleToCursor());
+                    this.leftButtonWasDown = true;
+                }
+            } else {
+                if (!game.input.activePointer.leftButton.isDown) {
+                    this.leftButtonWasDown = false;
+                }
+            }
+        }
+    }]);
+
+    return Controller;
+}();
+
+exports.default = Controller;
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _addEvent = __webpack_require__(12);
 
 var _addEvent2 = _interopRequireDefault(_addEvent);
 
@@ -291,7 +499,97 @@ var Crosshair = function () {
 exports.default = Crosshair;
 
 /***/ }),
-/* 3 */
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _Rocket2 = __webpack_require__(0);
+
+var _Rocket3 = _interopRequireDefault(_Rocket2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var DoubleRocket = function (_Rocket) {
+    _inherits(DoubleRocket, _Rocket);
+
+    function DoubleRocket(x, y, angle, owner) {
+        _classCallCheck(this, DoubleRocket);
+
+        var _this = _possibleConstructorReturn(this, (DoubleRocket.__proto__ || Object.getPrototypeOf(DoubleRocket)).call(this, x, y, angle, owner));
+
+        _this.baseDamage = 200; // dithers to zero at edge of blast radius
+        _this.blastRadius = 200;
+        _this.frames = [2, 3];
+
+        _this.init(x, y, angle, owner);
+
+        return _this;
+    }
+
+    return DoubleRocket;
+}(_Rocket3.default);
+
+exports.default = DoubleRocket;
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _Rocket2 = __webpack_require__(0);
+
+var _Rocket3 = _interopRequireDefault(_Rocket2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var NuclearRocket = function (_Rocket) {
+    _inherits(NuclearRocket, _Rocket);
+
+    function NuclearRocket(x, y, angle, owner) {
+        _classCallCheck(this, NuclearRocket);
+
+        var _this = _possibleConstructorReturn(this, (NuclearRocket.__proto__ || Object.getPrototypeOf(NuclearRocket)).call(this, x, y, angle, owner));
+
+        _this.baseDamage = 400; // dithers to zero at edge of blast radius
+        _this.blastRadius = 400;
+        _this.frames = [6, 7];
+
+        _this.init(x, y, angle, owner);
+
+        return _this;
+    }
+
+    return NuclearRocket;
+}(_Rocket3.default);
+
+exports.default = NuclearRocket;
+
+/***/ }),
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -316,7 +614,7 @@ var OrbitalTrack = function () {
         this.points = [];
 
         for (var i = 0; i < resolution; i++) {
-            this.points.push([Math.cos(i * (2 * Math.PI) / resolution) * radius * gameScaleBase + origin[0], Math.sin(i * (2 * Math.PI) / resolution) * radius * gameScaleBase + origin[1]]);
+            this.points.push([Math.cos(i * (360 / resolution) * (Math.PI / 180)) * radius * gameScaleBase + origin[0], Math.sin(i * (360 / resolution) * (Math.PI / 180)) * radius * gameScaleBase + origin[1]]);
         }
 
         this.radius = radius;
@@ -353,7 +651,167 @@ var OrbitalTrack = function () {
 exports.default = OrbitalTrack;
 
 /***/ }),
-/* 4 */
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _Rocket = __webpack_require__(0);
+
+var _Rocket2 = _interopRequireDefault(_Rocket);
+
+var _BasicRocket = __webpack_require__(3);
+
+var _BasicRocket2 = _interopRequireDefault(_BasicRocket);
+
+var _DoubleRocket = __webpack_require__(6);
+
+var _DoubleRocket2 = _interopRequireDefault(_DoubleRocket);
+
+var _UltraRocket = __webpack_require__(10);
+
+var _UltraRocket2 = _interopRequireDefault(_UltraRocket);
+
+var _NuclearRocket = __webpack_require__(7);
+
+var _NuclearRocket2 = _interopRequireDefault(_NuclearRocket);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var RocketLauncher = function () {
+    function RocketLauncher(parent) {
+        _classCallCheck(this, RocketLauncher);
+
+        this.parent = parent;
+
+        this.rocketType = 'basic';
+        this.rocketPool = [];
+    }
+
+    _createClass(RocketLauncher, [{
+        key: 'fire',
+        value: function fire(angle) {
+
+            var rocket;
+
+            switch (this.rocketType) {
+                case 'basic':
+                    rocket = new _BasicRocket2.default(this.parent.x, this.parent.y, angle, this.parent);
+                    break;
+                case 'double':
+                    rocket = new _DoubleRocket2.default(this.parent.x, this.parent.y, angle, this.parent);
+                    break;
+                case 'ultra':
+                    rocket = new _UltraRocket2.default(this.parent.x, this.parent.y, angle, this.parent);
+                    break;
+                case 'nuclear':
+                    rocket = new _NuclearRocket2.default(this.parent.x, this.parent.y, angle, this.parent);
+                    break;
+                default:
+                    rocket = new _BasicRocket2.default(this.parent.x, this.parent.y, angle, this.parent);
+                    break;
+            }
+
+            this.rocketPool.push(rocket);
+        }
+    }, {
+        key: 'update',
+        value: function update() {
+
+            for (var i in this.rocketPool) {
+                if (this.rocketPool[i].live) {
+                    this.rocketPool[i].update();
+                } else {
+                    delete this.rocketPool[i];
+                }
+            }
+        }
+    }, {
+        key: 'upgrade',
+        value: function upgrade() {
+
+            switch (this.rocketType) {
+                case 'basic':
+                    this.rocketType = 'double';
+                    break;
+                case 'double':
+                    this.rocketType = 'ultra';
+                    break;
+                case 'ultra':
+                    this.rocketType = 'nuclear';
+                    break;
+                case 'nuclear':
+                    break;
+                default:
+                    this.rocketType = 'basic';
+                    break;
+            }
+
+            return true;
+        }
+    }]);
+
+    return RocketLauncher;
+}();
+
+exports.default = RocketLauncher;
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _Rocket2 = __webpack_require__(0);
+
+var _Rocket3 = _interopRequireDefault(_Rocket2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var UltraRocket = function (_Rocket) {
+    _inherits(UltraRocket, _Rocket);
+
+    function UltraRocket(x, y, angle, owner) {
+        _classCallCheck(this, UltraRocket);
+
+        var _this = _possibleConstructorReturn(this, (UltraRocket.__proto__ || Object.getPrototypeOf(UltraRocket)).call(this, x, y, angle, owner));
+
+        _this.baseDamage = 300; // dithers to zero at edge of blast radius
+        _this.blastRadius = 300;
+        _this.frames = [4, 5];
+
+        _this.init(x, y, angle, owner);
+
+        return _this;
+    }
+
+    return UltraRocket;
+}(_Rocket3.default);
+
+exports.default = UltraRocket;
+
+/***/ }),
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -383,20 +841,27 @@ exports.default = function () {
 
     // create custom pointer
     window.crosshair = new _Crosshair2.default();
+
+    // initialize the controller
+    window.controller = new _Controller2.default(window.crosshair, window.asmallworld);
 };
 
-var _ASmallWorld = __webpack_require__(1);
+var _ASmallWorld = __webpack_require__(2);
 
 var _ASmallWorld2 = _interopRequireDefault(_ASmallWorld);
 
-var _Crosshair = __webpack_require__(2);
+var _Crosshair = __webpack_require__(5);
 
 var _Crosshair2 = _interopRequireDefault(_Crosshair);
+
+var _Controller = __webpack_require__(4);
+
+var _Controller2 = _interopRequireDefault(_Controller);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 5 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -415,7 +880,7 @@ function addEvent(obj, evt, fn) {
 }
 
 /***/ }),
-/* 6 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -424,7 +889,7 @@ function addEvent(obj, evt, fn) {
 game.load.spritesheet('asmallworld', 'assets/asmallworld.png', 16, 16);
 
 /***/ }),
-/* 7 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -433,7 +898,7 @@ game.load.spritesheet('asmallworld', 'assets/asmallworld.png', 16, 16);
 game.load.image('crosshair-normal', 'assets/crosshair-normal.png');
 
 /***/ }),
-/* 8 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -443,7 +908,16 @@ game.load.image('space', 'assets/space.png');
 game.load.spritesheet('sun', 'assets/sun.png', 64, 64);
 
 /***/ }),
-/* 9 */
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+game.load.spritesheet('rocket', 'assets/rocket.png', 8, 16);
+
+/***/ }),
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -456,13 +930,14 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = function () {
 
     // get assets
-    __webpack_require__(8);
-    __webpack_require__(6);
-    __webpack_require__(7);
+    __webpack_require__(15);
+    __webpack_require__(13);
+    __webpack_require__(14);
+    __webpack_require__(16);
 };
 
 /***/ }),
-/* 10 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -475,16 +950,17 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = function () {
 
     asmallworld.update();
+    controller.update();
 };
 
 /***/ }),
-/* 11 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _game = __webpack_require__(0);
+var _game = __webpack_require__(1);
 
 var _game2 = _interopRequireDefault(_game);
 

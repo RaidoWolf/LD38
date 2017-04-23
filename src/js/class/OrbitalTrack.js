@@ -11,14 +11,10 @@ export default class OrbitalTrack {
         for (var i = 0; i < resolution; i++) {
             this.points.push([
                 Math.cos(
-                    i * (
-                        2 * Math.PI
-                    ) / resolution
+                    (i * (360 / resolution)) * (Math.PI / 180)
                 ) * radius * gameScaleBase + origin[0],
                 Math.sin(
-                    i * (
-                        2 * Math.PI
-                    ) / resolution
+                    (i * (360 / resolution)) * (Math.PI / 180)
                 ) * radius * gameScaleBase + origin[1]
             ]);
         }

@@ -1,5 +1,6 @@
 import ASmallWorld from './class/ASmallWorld.js';
 import Crosshair from './class/Crosshair.js';
+import Controller from './class/Controller.js';
 
 export default function () {
 
@@ -21,5 +22,8 @@ export default function () {
 
     // create custom pointer
     window.crosshair = new Crosshair();
+
+    // initialize the controller
+    window.controller = new Controller(window.crosshair, window.asmallworld);
 
 }

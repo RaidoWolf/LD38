@@ -1,4 +1,5 @@
 import OrbitalTrack from './OrbitalTrack.js';
+import RocketLauncher from './RocketLauncher.js';
 
 export default class ASmallWorld {
 
@@ -24,7 +25,7 @@ export default class ASmallWorld {
         // enable arcade physics
         game.physics.arcade.enable(this.sprite);
 
-        this.weapons = [];
+        this.weapon = new RocketLauncher(this);
 
         this.orbitalOrigin = [x, y];
         this.orbitalPhase = 0;
@@ -50,6 +51,10 @@ export default class ASmallWorld {
         return true;
     }
 
+    fireWeapon (angle) {
+        return this.weapon.fire(angle);
+    }
+
     initOrbitalTrack () {
         this.orbitalTrack = new OrbitalTrack(
             64,
@@ -72,11 +77,12 @@ export default class ASmallWorld {
 
     update () {
 
-        if (this.gameScaleBase !== gameScaleBase) {
+        if (this.scale !== gameScaleBase) {
             this.sprite.scale.setTo(gameScaleBase, gameScaleBase);
-            this.gameScaleBase = gameScaleBase;
+            this.scale = gameScaleBase;
         }
 
+        // orbit at 60-degrees-per-second (10 RPM)
         var newPos = this.orbitalTrack.getPoint(
             this.orbitalPhase < 360 ?
             this.orbitalPhase++ :
@@ -84,6 +90,12 @@ export default class ASmallWorld {
         );
         this.moveTo(newPos[0], newPos[1]);
 
+        this.weapon.update();
+
+    }
+
+    upgradeWeapon () {
+        return this.weapon.upgrade();
     }
 
 }
