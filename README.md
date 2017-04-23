@@ -81,20 +81,24 @@ dependencies, then look over the build dependencies list.
     - [Website](http://sass-lang.com/)
     - [GitHub](https://github.com/sass/sass)
     - ```gem install sass```
-- Browserify
-    - JavaScipt in-script file inclusion compiler
-    - [Website](http://browserify.org/)
-    - [GitHub](https://github.com/substack/node-browserify)
-    - ```npm install -g browserify```
+- Webpack
+    - JavaScript bundler/compiler/build-system
+    - [Website](https://webpack.js.org/)
+    - [GitHub](https://github.com/webpack/webpack/)
+    - ```npm install```
 - Babel
     - JavaScript ES6+ transpiler
     - [Website](https://babeljs.io/)
     - [GitHub](https://github.com/babel/babel)
-    - ```npm install -g babel```
+    - ```npm install```
+- Babel Loader
+    - Babel loader for Webpack
+    - [GitHub](https://github.com/babel/babel-loader)
+    - ```npm install```
 - Babel Env Preset
     - Our chosen preset for Babel (don't install this globally, it doesn't work that way)
     - [GitHub](https://github.com/babel/babel-preset-env)
-    - ```npm install babel-preset-env```
+    - ```npm install```
 - Google Closure Compiler (as ```closure-compiler```, use symlink if different)
     - JavaScript minifier and optimizer
     - [Website](https://developers.google.com/closure/compiler/?hl=en)
