@@ -355,6 +355,13 @@ var Asteroid = function () {
     function Asteroid(x, y, angle, rotationalVelocity, size, velocity) {
         _classCallCheck(this, Asteroid);
 
+        this.live = true;
+
+        this.angle = angle;
+        this.rotationalVelocity = rotationalVelocity;
+        this.size = size;
+        this.velocity = velocity;
+
         this.sprite = game.add.sprite(x, y, 'asteroid');
         this.sprite.frame = Math.floor(Math.random() * 4.9999);
 
@@ -368,14 +375,17 @@ var Asteroid = function () {
 
         this.sprite.body.velocity.x = this.velocity * gameScaleBase * Math.cos(this.angle);
         this.sprite.body.velocity.y = this.velocity * gameScaleBase * Math.sin(this.angle);
-
-        this.angle = angle;
-        this.rotationalVelocity = rotationalVelocity;
-        this.size = size;
-        this.velocity = velocity;
     }
 
     _createClass(Asteroid, [{
+        key: 'destroy',
+        value: function destroy() {
+
+            this.sprite.destroy();
+            this.live = false;
+            return true;
+        }
+    }, {
         key: 'update',
         value: function update() {
 
@@ -478,7 +488,9 @@ var AsteroidEmitter = function () {
 
             }
 
-            this.asteroidPool.push(new _Asteroid2.default(x, y, Math.random() * 2 * Math.PI - Math.PI, Math.random() * 2 * Math.PI - Math.PI, Math.log2(Math.random() * Math.pow(2, this.maxSize - this.minSize)) + this.minSize, Math.random() * (this.maxVelocity - this.minVelocity) + this.minVelocity));
+            var asteroid = new _Asteroid2.default(x, y, Math.random() * 2 * Math.PI - Math.PI, Math.random() * Math.PI - Math.PI, Math.random() * (this.maxSize - this.minSize) + this.minSize, Math.random() * (this.maxVelocity - this.minVelocity) + this.minVelocity);
+
+            this.asteroidPool.push(asteroid);
 
             return true;
         }
@@ -494,12 +506,20 @@ var AsteroidEmitter = function () {
             }
 
             for (var i in this.asteroidPool) {
-                if (
-                // asteroid is inside bounds
-                this.asteroidPool[i].y > this.topLine && this.asteroidPool[i].y < this.bottomLine && this.asteroidPool[i].x < this.leftLine && this.asteroidPool[i].x > this.rightLine) {
-                    this.asteroidPool[i].update();
+                if (this.asteroidPool[i].live) {
+                    if (
+                    // asteroid is inside bounds
+                    //this.asteroidPool[i].y >= this.topLine - 100 &&
+                    //this.asteroidPool[i].y <= this.bottomLine + 100 &&
+                    //this.asteroidPool[i].x <= this.leftLine - 100 &&
+                    //this.asteroidPool[i].x >= this.rightLine + 100
+                    true) {
+                        this.asteroidPool[i].update();
+                    } else {
+                        this.asteroidPool[i].destroy();
+                    }
                 } else {
-                    delete this.asteroidPool[i];
+                    this.asteroidPool.splice(i, 1);
                 }
             }
         }
@@ -950,7 +970,7 @@ var RocketLauncher = function () {
                 if (this.rocketPool[i].live) {
                     this.rocketPool[i].update();
                 } else {
-                    delete this.rocketPool[i];
+                    this.rocketPool.splice(i, 1);
                 }
             }
         }

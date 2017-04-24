@@ -65,7 +65,7 @@ export default class RocketLauncher {
             if (this.rocketPool[i].live) {
                 this.rocketPool[i].update();
             } else {
-                delete this.rocketPool[i];
+                this.rocketPool.splice(i, 1);
             }
         }
 

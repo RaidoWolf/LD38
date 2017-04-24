@@ -2,6 +2,13 @@ export default class Asteroid {
 
     constructor (x, y, angle, rotationalVelocity, size, velocity) {
 
+        this.live = true;
+
+        this.angle = angle;
+        this.rotationalVelocity = rotationalVelocity;
+        this.size = size;
+        this.velocity = velocity;
+
         this.sprite = game.add.sprite(x, y, 'asteroid');
         this.sprite.frame = Math.floor(Math.random() * 4.9999);
 
@@ -18,10 +25,13 @@ export default class Asteroid {
         this.sprite.body.velocity.y =
             this.velocity * gameScaleBase * Math.sin(this.angle);
 
-        this.angle = angle;
-        this.rotationalVelocity = rotationalVelocity;
-        this.size = size;
-        this.velocity = velocity;
+    }
+
+    destroy () {
+
+        this.sprite.destroy();
+        this.live = false;
+        return true;
 
     }
 

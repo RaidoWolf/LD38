@@ -50,14 +50,16 @@ export default class AsteroidEmitter {
 
         }
 
-        this.asteroidPool.push(new Asteroid(
+        var asteroid = new Asteroid(
             x,
             y,
             Math.random() * 2 * Math.PI - Math.PI,
-            Math.random() * 2 * Math.PI - Math.PI,
-            Math.log2(Math.random() * Math.pow(2, (this.maxSize - this.minSize))) + this.minSize,
+            Math.random() * Math.PI - Math.PI,
+            Math.random() * (this.maxSize - this.minSize) + this.minSize,
             Math.random() * (this.maxVelocity - this.minVelocity) + this.minVelocity
-        ));
+        );
+
+        this.asteroidPool.push(asteroid);
 
         return true;
 
@@ -73,16 +75,21 @@ export default class AsteroidEmitter {
         }
 
         for (var i in this.asteroidPool) {
-            if (
-                // asteroid is inside bounds
-                this.asteroidPool[i].y > this.topLine &&
-                this.asteroidPool[i].y < this.bottomLine &&
-                this.asteroidPool[i].x < this.leftLine &&
-                this.asteroidPool[i].x > this.rightLine
-            ) {
-                this.asteroidPool[i].update();
+            if (this.asteroidPool[i].live) {
+                if (
+                    // asteroid is inside bounds
+                    //this.asteroidPool[i].y >= this.topLine - 100 &&
+                    //this.asteroidPool[i].y <= this.bottomLine + 100 &&
+                    //this.asteroidPool[i].x <= this.leftLine - 100 &&
+                    //this.asteroidPool[i].x >= this.rightLine + 100
+                    true
+                ) {
+                    this.asteroidPool[i].update();
+                } else {
+                    this.asteroidPool[i].destroy();
+                }
             } else {
-                delete this.asteroidPool[i];
+                this.asteroidPool.splice(i, 1);
             }
         }
 
