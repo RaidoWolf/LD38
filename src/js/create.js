@@ -1,3 +1,4 @@
+import Sun from './class/Sun.js';
 import ASmallWorld from './class/ASmallWorld.js';
 import Crosshair from './class/Crosshair.js';
 import Controller from './class/Controller.js';
@@ -10,20 +11,16 @@ export default function () {
     // add a starry background
     window.background = game.add.tileSprite(0, 0, game.world.width, game.world.height, 'space');
 
-    // create and animate the sun
-    window.sun = game.add.sprite(game.world.centerX, game.world.centerY, 'sun');
-    sun.anchor.setTo(0.5, 0.5);
-    sun.scale.setTo(gameScaleBase, gameScaleBase);
-    sun.animations.add('default');
-    sun.animations.play('default', 10, true);
+    // create the sun (the poorly drawn one)
+    window.sun = new Sun(game.world.centerX, game.world.centerY);
 
-    // create and animate the world (the small one)
+    // create the world (the small one)
     window.asmallworld = new ASmallWorld(game.world.centerX, game.world.centerY);
 
     // create custom pointer
     window.crosshair = new Crosshair();
 
     // initialize the controller
-    window.controller = new Controller(window.crosshair, window.asmallworld);
+    window.controller = new Controller(crosshair, asmallworld);
 
 }

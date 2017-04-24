@@ -31,7 +31,8 @@ export default class Rocket {
         this.sprite.angle = angle;
 
         game.physics.arcade.enable(this.sprite);
-        this.sprite.collideWorldBounds = false;
+        this.sprite.body.enable = true;
+        this.sprite.body.collideWorldBounds = false;
 
         this.angle = angle;
         this.owner = owner;

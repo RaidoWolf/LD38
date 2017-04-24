@@ -28,6 +28,24 @@ export default class Crosshair {
 
     }
 
+    get x () {
+        return this.sprite.x;
+    }
+
+    get y () {
+        return this.sprite.y;
+    }
+
+    set x (x) {
+        this.sprite.x = x;
+        return true;
+    }
+
+    set y (y) {
+        this.sprite.y = y;
+        return true;
+    }
+
     hide () {
         this.sprite.visible = false;
     }

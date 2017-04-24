@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 19);
+/******/ 	return __webpack_require__(__webpack_require__.s = 20);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -116,7 +116,8 @@ var Rocket = function () {
             this.sprite.angle = angle;
 
             game.physics.arcade.enable(this.sprite);
-            this.sprite.collideWorldBounds = false;
+            this.sprite.body.enable = true;
+            this.sprite.body.collideWorldBounds = false;
 
             this.angle = angle;
             this.owner = owner;
@@ -169,15 +170,15 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _preload = __webpack_require__(17);
+var _preload = __webpack_require__(18);
 
 var _preload2 = _interopRequireDefault(_preload);
 
-var _create = __webpack_require__(11);
+var _create = __webpack_require__(12);
 
 var _create2 = _interopRequireDefault(_create);
 
-var _update = __webpack_require__(18);
+var _update = __webpack_require__(19);
 
 var _update2 = _interopRequireDefault(_update);
 
@@ -437,7 +438,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _addEvent = __webpack_require__(12);
+var _addEvent = __webpack_require__(13);
 
 var _addEvent2 = _interopRequireDefault(_addEvent);
 
@@ -490,6 +491,24 @@ var Crosshair = function () {
         value: function update(pointer, x, y) {
             this.sprite.x = x;
             this.sprite.y = y;
+        }
+    }, {
+        key: 'x',
+        get: function get() {
+            return this.sprite.x;
+        },
+        set: function set(x) {
+            this.sprite.x = x;
+            return true;
+        }
+    }, {
+        key: 'y',
+        get: function get() {
+            return this.sprite.y;
+        },
+        set: function set(y) {
+            this.sprite.y = y;
+            return true;
         }
     }]);
 
@@ -675,7 +694,7 @@ var _DoubleRocket = __webpack_require__(6);
 
 var _DoubleRocket2 = _interopRequireDefault(_DoubleRocket);
 
-var _UltraRocket = __webpack_require__(10);
+var _UltraRocket = __webpack_require__(11);
 
 var _UltraRocket2 = _interopRequireDefault(_UltraRocket);
 
@@ -776,6 +795,36 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Sun = function Sun(x, y) {
+    _classCallCheck(this, Sun);
+
+    x = typeof x !== 'undefined' ? x : game.world.centerX;
+    y = typeof y !== 'undefined' ? y : game.world.centerY;
+
+    this.sprite = game.add.sprite(x, y, 'sun');
+
+    this.sprite.anchor.setTo(0.5, 0.5);
+    this.sprite.scale.setTo(gameScaleBase, gameScaleBase);
+
+    this.sprite.animations.add('default');
+    this.sprite.animations.play('default', 10, true);
+};
+
+exports.default = Sun;
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
 var _Rocket2 = __webpack_require__(0);
 
 var _Rocket3 = _interopRequireDefault(_Rocket2);
@@ -811,7 +860,7 @@ var UltraRocket = function (_Rocket) {
 exports.default = UltraRocket;
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -829,22 +878,22 @@ exports.default = function () {
     // add a starry background
     window.background = game.add.tileSprite(0, 0, game.world.width, game.world.height, 'space');
 
-    // create and animate the sun
-    window.sun = game.add.sprite(game.world.centerX, game.world.centerY, 'sun');
-    sun.anchor.setTo(0.5, 0.5);
-    sun.scale.setTo(gameScaleBase, gameScaleBase);
-    sun.animations.add('default');
-    sun.animations.play('default', 10, true);
+    // create the sun (the poorly drawn one)
+    window.sun = new _Sun2.default(game.world.centerX, game.world.centerY);
 
-    // create and animate the world (the small one)
+    // create the world (the small one)
     window.asmallworld = new _ASmallWorld2.default(game.world.centerX, game.world.centerY);
 
     // create custom pointer
     window.crosshair = new _Crosshair2.default();
 
     // initialize the controller
-    window.controller = new _Controller2.default(window.crosshair, window.asmallworld);
+    window.controller = new _Controller2.default(crosshair, asmallworld);
 };
+
+var _Sun = __webpack_require__(10);
+
+var _Sun2 = _interopRequireDefault(_Sun);
 
 var _ASmallWorld = __webpack_require__(2);
 
@@ -861,7 +910,7 @@ var _Controller2 = _interopRequireDefault(_Controller);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -880,7 +929,7 @@ function addEvent(obj, evt, fn) {
 }
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -889,7 +938,7 @@ function addEvent(obj, evt, fn) {
 game.load.spritesheet('asmallworld', 'assets/asmallworld.png', 16, 16);
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -898,7 +947,7 @@ game.load.spritesheet('asmallworld', 'assets/asmallworld.png', 16, 16);
 game.load.image('crosshair-normal', 'assets/crosshair-normal.png');
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -908,7 +957,7 @@ game.load.image('space', 'assets/space.png');
 game.load.spritesheet('sun', 'assets/sun.png', 64, 64);
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -917,7 +966,7 @@ game.load.spritesheet('sun', 'assets/sun.png', 64, 64);
 game.load.spritesheet('rocket', 'assets/rocket.png', 8, 16);
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -930,14 +979,14 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = function () {
 
     // get assets
-    __webpack_require__(15);
-    __webpack_require__(13);
-    __webpack_require__(14);
     __webpack_require__(16);
+    __webpack_require__(14);
+    __webpack_require__(15);
+    __webpack_require__(17);
 };
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -954,7 +1003,7 @@ exports.default = function () {
 };
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
