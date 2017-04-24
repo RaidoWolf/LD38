@@ -1,5 +1,6 @@
 import Sun from './class/Sun.js';
 import ASmallWorld from './class/ASmallWorld.js';
+import AsteroidEmitter from './class/AsteroidEmitter.js';
 import Crosshair from './class/Crosshair.js';
 import Controller from './class/Controller.js';
 import Scoreboard from './class/Scoreboard.js';
@@ -17,6 +18,9 @@ export default function () {
 
     // create the world (the small one)
     window.asmallworld = new ASmallWorld(game.world.centerX, game.world.centerY);
+
+    // create the asteroid emitter
+    window.asteroidEmitter = new AsteroidEmitter();
 
     // create custom pointer
     window.crosshair = new Crosshair();

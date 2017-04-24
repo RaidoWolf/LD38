@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 22);
+/******/ 	return __webpack_require__(__webpack_require__.s = 24);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -177,15 +177,15 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _preload = __webpack_require__(20);
+var _preload = __webpack_require__(22);
 
 var _preload2 = _interopRequireDefault(_preload);
 
-var _create = __webpack_require__(13);
+var _create = __webpack_require__(15);
 
 var _create2 = _interopRequireDefault(_create);
 
-var _update = __webpack_require__(21);
+var _update = __webpack_require__(23);
 
 var _update2 = _interopRequireDefault(_update);
 
@@ -221,11 +221,11 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _OrbitalTrack = __webpack_require__(8);
+var _OrbitalTrack = __webpack_require__(10);
 
 var _OrbitalTrack2 = _interopRequireDefault(_OrbitalTrack);
 
-var _RocketLauncher = __webpack_require__(9);
+var _RocketLauncher = __webpack_require__(11);
 
 var _RocketLauncher2 = _interopRequireDefault(_RocketLauncher);
 
@@ -347,6 +347,180 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Asteroid = function () {
+    function Asteroid(x, y, angle, rotationalVelocity, size, velocity) {
+        _classCallCheck(this, Asteroid);
+
+        this.sprite = game.add.sprite(x, y, 'asteroid');
+        this.sprite.frame = Math.floor(Math.random() * 4.9999);
+
+        this.sprite.anchor.setTo(0.5, 0.5);
+
+        this.sprite.scale.setTo(gameScaleBase * size * 4, gameScaleBase * size * 4);
+
+        game.physics.arcade.enable(this.sprite);
+        this.sprite.body.enable = true;
+        this.sprite.body.collideWorldBounds = false;
+
+        this.sprite.body.velocity.x = this.velocity * gameScaleBase * Math.cos(this.angle);
+        this.sprite.body.velocity.y = this.velocity * gameScaleBase * Math.sin(this.angle);
+
+        this.angle = angle;
+        this.rotationalVelocity = rotationalVelocity;
+        this.size = size;
+        this.velocity = velocity;
+    }
+
+    _createClass(Asteroid, [{
+        key: 'update',
+        value: function update() {
+
+            this.sprite.angle += (this.rotationalVelocity * (180 / Math.PI) + 90) / 60;
+        }
+    }, {
+        key: 'x',
+        get: function get() {
+            return this.sprite.x;
+        },
+        set: function set(x) {
+            this.sprite.x = x;
+            return true;
+        }
+    }, {
+        key: 'y',
+        get: function get() {
+            return this.sprite.y;
+        },
+        set: function set(y) {
+            this.sprite.y = y;
+            return true;
+        }
+    }]);
+
+    return Asteroid;
+}();
+
+exports.default = Asteroid;
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _Asteroid = __webpack_require__(3);
+
+var _Asteroid2 = _interopRequireDefault(_Asteroid);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var AsteroidEmitter = function () {
+    function AsteroidEmitter() {
+        _classCallCheck(this, AsteroidEmitter);
+
+        this.spawnTicks = 60;
+        this.aliveLimit = 20;
+        this.minSize = 1;
+        this.maxSize = 2;
+        this.minVelocity = 10;
+        this.maxVelocity = 50;
+
+        this.topLine = -500;
+        this.leftLine = -500;
+        this.bottomLine = game.world.height + 500;
+        this.rightLine = game.world.height + 500;
+
+        this.asteroidPool = [];
+
+        this.tickCount = 0;
+    }
+
+    _createClass(AsteroidEmitter, [{
+        key: 'spawn',
+        value: function spawn() {
+
+            var x;
+            var y;
+
+            switch (Math.floor(Math.random() * 3.99999)) {
+                case 0:
+                    x = Math.random() * (this.rightLine - this.leftLine) + this.leftLine;
+                    y = this.topLine;
+                    break;
+                case 1:
+                    x = this.rightLine;
+                    y = Math.random() * (this.bottomLine - this.topLine) + this.topLine;
+                    break;
+                case 2:
+                    x = Math.random() * (this.rightLine - this.leftLine) + this.leftLine;
+                    y = this.bottomLine;
+                    break;
+                case 3:
+                    x = this.leftLine;
+                    y = Math.random() & this.bottomLine - this.topLine + this.topLine;
+                    break;
+                default:
+                    x = -1000;
+                    y = -1000;
+
+            }
+
+            this.asteroidPool.push(new _Asteroid2.default(x, y, Math.random() * 2 * Math.PI - Math.PI, Math.random() * 2 * Math.PI - Math.PI, Math.log2(Math.random() * Math.pow(this.maxSize - this.minSize, 2)) + this.minSize, Math.random() * (this.maxVelocity - this.minVelocity) + this.minVelocity));
+
+            return true;
+        }
+    }, {
+        key: 'update',
+        value: function update() {
+
+            if (++this.tickCount >= this.spawnTicks) {
+                this.tickCount = 0;
+                if (this.asteroidPool.length < this.aliveLimit) {
+                    this.spawn();
+                }
+            }
+
+            for (var i in this.asteroidPool) {
+                if (
+                // asteroid is inside bounds
+                this.asteroidPool[i].y > this.topLine && this.asteroidPool[i].y < this.bottomLine && this.asteroidPool[i].x < this.leftLine && this.asteroidPool[i].x > this.rightLine) {
+                    this.asteroidPool[i].update();
+                } else {
+                    delete this.asteroidPool[i];
+                }
+            }
+        }
+    }]);
+
+    return AsteroidEmitter;
+}();
+
+exports.default = AsteroidEmitter;
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
 var _Rocket2 = __webpack_require__(0);
 
 var _Rocket3 = _interopRequireDefault(_Rocket2);
@@ -382,7 +556,7 @@ var BasicRocket = function (_Rocket) {
 exports.default = BasicRocket;
 
 /***/ }),
-/* 4 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -436,7 +610,7 @@ var Controller = function () {
 exports.default = Controller;
 
 /***/ }),
-/* 5 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -448,7 +622,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _addEvent = __webpack_require__(14);
+var _addEvent = __webpack_require__(16);
 
 var _addEvent2 = _interopRequireDefault(_addEvent);
 
@@ -528,7 +702,7 @@ var Crosshair = function () {
 exports.default = Crosshair;
 
 /***/ }),
-/* 6 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -573,7 +747,7 @@ var DoubleRocket = function (_Rocket) {
 exports.default = DoubleRocket;
 
 /***/ }),
-/* 7 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -618,7 +792,7 @@ var NuclearRocket = function (_Rocket) {
 exports.default = NuclearRocket;
 
 /***/ }),
-/* 8 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -680,7 +854,7 @@ var OrbitalTrack = function () {
 exports.default = OrbitalTrack;
 
 /***/ }),
-/* 9 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -696,19 +870,19 @@ var _Rocket = __webpack_require__(0);
 
 var _Rocket2 = _interopRequireDefault(_Rocket);
 
-var _BasicRocket = __webpack_require__(3);
+var _BasicRocket = __webpack_require__(5);
 
 var _BasicRocket2 = _interopRequireDefault(_BasicRocket);
 
-var _DoubleRocket = __webpack_require__(6);
+var _DoubleRocket = __webpack_require__(8);
 
 var _DoubleRocket2 = _interopRequireDefault(_DoubleRocket);
 
-var _UltraRocket = __webpack_require__(12);
+var _UltraRocket = __webpack_require__(14);
 
 var _UltraRocket2 = _interopRequireDefault(_UltraRocket);
 
-var _NuclearRocket = __webpack_require__(7);
+var _NuclearRocket = __webpack_require__(9);
 
 var _NuclearRocket2 = _interopRequireDefault(_NuclearRocket);
 
@@ -811,7 +985,7 @@ var RocketLauncher = function () {
 exports.default = RocketLauncher;
 
 /***/ }),
-/* 10 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -881,7 +1055,7 @@ var Scoreboard = function () {
 exports.default = Scoreboard;
 
 /***/ }),
-/* 11 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -911,7 +1085,7 @@ var Sun = function Sun(x, y) {
 exports.default = Sun;
 
 /***/ }),
-/* 12 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -956,7 +1130,7 @@ var UltraRocket = function (_Rocket) {
 exports.default = UltraRocket;
 
 /***/ }),
-/* 13 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -980,6 +1154,9 @@ exports.default = function () {
     // create the world (the small one)
     window.asmallworld = new _ASmallWorld2.default(game.world.centerX, game.world.centerY);
 
+    // create the asteroid emitter
+    window.asteroidEmitter = new _AsteroidEmitter2.default();
+
     // create custom pointer
     window.crosshair = new _Crosshair2.default();
 
@@ -990,7 +1167,7 @@ exports.default = function () {
     window.scoreboard = new _Scoreboard2.default(asmallworld);
 };
 
-var _Sun = __webpack_require__(11);
+var _Sun = __webpack_require__(13);
 
 var _Sun2 = _interopRequireDefault(_Sun);
 
@@ -998,22 +1175,26 @@ var _ASmallWorld = __webpack_require__(2);
 
 var _ASmallWorld2 = _interopRequireDefault(_ASmallWorld);
 
-var _Crosshair = __webpack_require__(5);
+var _AsteroidEmitter = __webpack_require__(4);
+
+var _AsteroidEmitter2 = _interopRequireDefault(_AsteroidEmitter);
+
+var _Crosshair = __webpack_require__(7);
 
 var _Crosshair2 = _interopRequireDefault(_Crosshair);
 
-var _Controller = __webpack_require__(4);
+var _Controller = __webpack_require__(6);
 
 var _Controller2 = _interopRequireDefault(_Controller);
 
-var _Scoreboard = __webpack_require__(10);
+var _Scoreboard = __webpack_require__(12);
 
 var _Scoreboard2 = _interopRequireDefault(_Scoreboard);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 14 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1032,7 +1213,7 @@ function addEvent(obj, evt, fn) {
 }
 
 /***/ }),
-/* 15 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1041,7 +1222,7 @@ function addEvent(obj, evt, fn) {
 game.load.spritesheet('asmallworld', 'assets/asmallworld.png', 16, 16);
 
 /***/ }),
-/* 16 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1050,7 +1231,7 @@ game.load.spritesheet('asmallworld', 'assets/asmallworld.png', 16, 16);
 game.load.image('crosshair-normal', 'assets/crosshair-normal.png');
 
 /***/ }),
-/* 17 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1059,7 +1240,7 @@ game.load.image('crosshair-normal', 'assets/crosshair-normal.png');
 game.load.spritesheet('asteroid', 'assets/asteroid.png', 16, 16);
 
 /***/ }),
-/* 18 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1069,7 +1250,7 @@ game.load.image('space', 'assets/space.png');
 game.load.spritesheet('sun', 'assets/sun.png', 64, 64);
 
 /***/ }),
-/* 19 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1078,7 +1259,7 @@ game.load.spritesheet('sun', 'assets/sun.png', 64, 64);
 game.load.spritesheet('rocket', 'assets/rocket.png', 8, 16);
 
 /***/ }),
-/* 20 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1091,15 +1272,15 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = function () {
 
     // get assets
-    __webpack_require__(18);
-    __webpack_require__(15);
-    __webpack_require__(16);
-    __webpack_require__(19);
+    __webpack_require__(20);
     __webpack_require__(17);
+    __webpack_require__(18);
+    __webpack_require__(21);
+    __webpack_require__(19);
 };
 
 /***/ }),
-/* 21 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1114,10 +1295,11 @@ exports.default = function () {
     asmallworld.update();
     controller.update();
     scoreboard.update();
+    asteroidEmitter.update();
 };
 
 /***/ }),
-/* 22 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
