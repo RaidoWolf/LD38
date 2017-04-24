@@ -92,11 +92,9 @@ export default class ASmallWorld {
         this.moveTo(newPos[0], newPos[1]);
 
         for (var i in asteroidEmitter.asteroidPool) {
-            var dist2 = Math.abs(
-                Math.pow(this.x - asteroidEmitter.asteroidPool[i].x, 2)
-            ) + Math.abs(
-                Math.pow(this.y - asteroidEmitter.asteroidPool[i].y, 2)
-            );
+            var dist2 =
+                Math.pow(this.x - asteroidEmitter.asteroidPool[i].x, 2) +
+                Math.pow(this.y - asteroidEmitter.asteroidPool[i].y, 2);
 
             if (dist2 < Math.pow(24 * gameScaleBase * asteroidEmitter.asteroidPool[i].size, 2)) {
                 game.state.start('gameover');

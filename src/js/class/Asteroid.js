@@ -9,6 +9,8 @@ export default class Asteroid {
         this.size = size;
         this.velocity = velocity;
 
+        this.health = 50 * size;
+
         this.sprite = game.add.sprite(x, y, 'asteroid');
         this.sprite.frame = Math.floor(Math.random() * 4.9999);
         enemies.add(this.sprite);
@@ -56,6 +58,9 @@ export default class Asteroid {
 
     update () {
 
+        if (this.health <= 0) {
+            this.destroy();
+        }
         this.sprite.angle += (this.rotationalVelocity * (180 / Math.PI) + 90) / 60;
 
     }

@@ -1,3 +1,5 @@
+import Explosion from './Explosion.js';
+
 export default class Rocket {
 
     constructor (x, y, angle, owner) {
@@ -78,16 +80,13 @@ export default class Rocket {
             this.velocity * gameScaleBase * Math.sin(this.angle);
 
         for (var i in asteroidEmitter.asteroidPool) {
-            var dist2 = Math.abs(
-                Math.pow(this.x - asteroidEmitter.asteroidPool[i].x, 2)
-            ) + Math.abs(
-                Math.pow(this.y - asteroidEmitter.asteroidPool[i].y, 2)
-            );
+            var dist2 =
+                Math.pow(this.x - asteroidEmitter.asteroidPool[i].x, 2) +
+                Math.pow(this.y - asteroidEmitter.asteroidPool[i].y, 2);
 
             if (dist2 < Math.pow(24 * gameScaleBase * asteroidEmitter.asteroidPool[i].size, 2)) {
-                scoreboard.points += Math.round(asteroidEmitter.asteroidPool[i].size * 10);
+                this.owner.explosionPool.push(new Explosion(this.x, this.y, this.baseDamage, this.blastRadius));
                 this.destroy();
-                asteroidEmitter.asteroidPool[i].destroy();
             }
         }
 

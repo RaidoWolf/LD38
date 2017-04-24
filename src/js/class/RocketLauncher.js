@@ -6,12 +6,13 @@ import NuclearRocket from './NuclearRocket.js';
 
 export default class RocketLauncher {
 
-    constructor (parent) {
+    constructor (owner) {
 
-        this.parent = parent;
+        this.owner = owner;
 
         this.rocketType = 'basic';
         this.rocketPool = [];
+        this.explosionPool = [];
 
         this.cooldown = false;
 
@@ -26,19 +27,19 @@ export default class RocketLauncher {
 
             switch (this.rocketType) {
                 case 'basic':
-                    rocket = new BasicRocket(this.parent.x, this.parent.y, angle, this.parent);
+                    rocket = new BasicRocket(this.owner.x, this.owner.y, angle, this);
                     break;
                 case 'double':
-                    rocket = new DoubleRocket(this.parent.x, this.parent.y, angle, this.parent);
+                    rocket = new DoubleRocket(this.owner.x, this.owner.y, angle, this);
                     break;
                 case 'ultra':
-                    rocket = new UltraRocket(this.parent.x, this.parent.y, angle, this.parent);
+                    rocket = new UltraRocket(this.owner.x, this.owner.y, angle, this);
                     break;
                 case 'nuclear':
-                    rocket = new NuclearRocket(this.parent.x, this.parent.y, angle, this.parent);
+                    rocket = new NuclearRocket(this.owner.x, this.owner.y, angle, this);
                     break;
                 default:
-                    rocket = new BasicRocket(this.parent.x, this.parent.y, angle, this.parent);
+                    rocket = new BasicRocket(this.owner.x, this.owner.y, angle, this);
                     break;
             }
 
@@ -66,6 +67,14 @@ export default class RocketLauncher {
                 this.rocketPool[i].update();
             } else {
                 this.rocketPool.splice(i, 1);
+            }
+        }
+
+        for (i in this.explosionPool) {
+            if (this.explosionPool[i].live) {
+                this.explosionPool[i].update();
+            } else {
+                this.explosionPool.splice(i, 1);
             }
         }
 

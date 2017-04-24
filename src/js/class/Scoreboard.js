@@ -52,9 +52,9 @@ export default class Scoreboard {
 
         if (this.lastPoints !== this.points) {
             if (
-                (this.lastPoints < 1000 && this.points >= 1000) ||
-                (this.lastPoints < 2000 && this.points >= 2000) ||
-                (this.lastPoints < 4000 && this.points >= 4000)
+                (this.lastPoints < 2500 && this.points >= 2500) ||
+                (this.lastPoints < 10000 && this.points >= 10000) ||
+                (this.lastPoints < 25000 && this.points >= 25000)
             ) {
                 asmallworld.upgradeWeapon();
             }

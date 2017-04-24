@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 30);
+/******/ 	return __webpack_require__(__webpack_require__.s = 31);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -78,6 +78,12 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _Explosion = __webpack_require__(9);
+
+var _Explosion2 = _interopRequireDefault(_Explosion);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -143,12 +149,11 @@ var Rocket = function () {
             this.sprite.body.velocity.y = this.velocity * gameScaleBase * Math.sin(this.angle);
 
             for (var i in asteroidEmitter.asteroidPool) {
-                var dist2 = Math.abs(Math.pow(this.x - asteroidEmitter.asteroidPool[i].x, 2)) + Math.abs(Math.pow(this.y - asteroidEmitter.asteroidPool[i].y, 2));
+                var dist2 = Math.pow(this.x - asteroidEmitter.asteroidPool[i].x, 2) + Math.pow(this.y - asteroidEmitter.asteroidPool[i].y, 2);
 
                 if (dist2 < Math.pow(24 * gameScaleBase * asteroidEmitter.asteroidPool[i].size, 2)) {
-                    scoreboard.points += Math.round(asteroidEmitter.asteroidPool[i].size * 10);
+                    this.owner.explosionPool.push(new _Explosion2.default(this.x, this.y, this.baseDamage, this.blastRadius));
                     this.destroy();
-                    asteroidEmitter.asteroidPool[i].destroy();
                 }
             }
         }
@@ -190,7 +195,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _addEvent = __webpack_require__(16);
+var _addEvent = __webpack_require__(17);
 
 var _addEvent2 = _interopRequireDefault(_addEvent);
 
@@ -281,11 +286,11 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _playing = __webpack_require__(26);
+var _playing = __webpack_require__(27);
 
 var _playing2 = _interopRequireDefault(_playing);
 
-var _gameover = __webpack_require__(22);
+var _gameover = __webpack_require__(23);
 
 var _gameover2 = _interopRequireDefault(_gameover);
 
@@ -324,11 +329,11 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _OrbitalTrack = __webpack_require__(11);
+var _OrbitalTrack = __webpack_require__(12);
 
 var _OrbitalTrack2 = _interopRequireDefault(_OrbitalTrack);
 
-var _RocketLauncher = __webpack_require__(12);
+var _RocketLauncher = __webpack_require__(13);
 
 var _RocketLauncher2 = _interopRequireDefault(_RocketLauncher);
 
@@ -406,7 +411,7 @@ var ASmallWorld = function () {
             this.moveTo(newPos[0], newPos[1]);
 
             for (var i in asteroidEmitter.asteroidPool) {
-                var dist2 = Math.abs(Math.pow(this.x - asteroidEmitter.asteroidPool[i].x, 2)) + Math.abs(Math.pow(this.y - asteroidEmitter.asteroidPool[i].y, 2));
+                var dist2 = Math.pow(this.x - asteroidEmitter.asteroidPool[i].x, 2) + Math.pow(this.y - asteroidEmitter.asteroidPool[i].y, 2);
 
                 if (dist2 < Math.pow(24 * gameScaleBase * asteroidEmitter.asteroidPool[i].size, 2)) {
                     game.state.start('gameover');
@@ -471,6 +476,8 @@ var Asteroid = function () {
         this.size = size;
         this.velocity = velocity;
 
+        this.health = 50 * size;
+
         this.sprite = game.add.sprite(x, y, 'asteroid');
         this.sprite.frame = Math.floor(Math.random() * 4.9999);
         enemies.add(this.sprite);
@@ -499,6 +506,9 @@ var Asteroid = function () {
         key: 'update',
         value: function update() {
 
+            if (this.health <= 0) {
+                this.destroy();
+            }
             this.sprite.angle += (this.rotationalVelocity * (180 / Math.PI) + 90) / 60;
         }
     }, {
@@ -783,6 +793,64 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Explosion = function () {
+    function Explosion(x, y, baseDamage, radius) {
+        _classCallCheck(this, Explosion);
+
+        this.alive = true;
+
+        this.baseDamage = baseDamage;
+        this.radius = radius * gameScaleBase;
+
+        for (var i in asteroidEmitter.asteroidPool) {
+            var dist2 = Math.pow(x - asteroidEmitter.asteroidPool[i].x, 2) + Math.pow(y - asteroidEmitter.asteroidPool[i].y, 2);
+
+            if (dist2 < Math.pow(24 * gameScaleBase * asteroidEmitter.asteroidPool[i].size + radius, 2)) {
+                var hitboxRadius2 = Math.pow(24 * gameScaleBase * asteroidEmitter.asteroidPool[i].size, 2);
+                var hitboxDist2 = Math.abs(dist2 - hitboxRadius2);
+                var damageMultiplier = 1 / (hitboxDist2 / Math.pow(radius, 2));
+
+                var asteroidHealth = asteroidEmitter.asteroidPool[i].health;
+                var damage = baseDamage * damageMultiplier * 0.2;
+                asteroidEmitter.asteroidPool[i].health -= damage;
+                scoreboard.points += Math.ceil(damage < asteroidHealth ? damage : asteroidHealth);
+            }
+        }
+
+        this.destroy();
+    }
+
+    _createClass(Explosion, [{
+        key: "destroy",
+        value: function destroy() {
+
+            this.alive = false;
+        }
+    }, {
+        key: "update",
+        value: function update() {}
+    }]);
+
+    return Explosion;
+}();
+
+exports.default = Explosion;
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var GameOverMenu = function GameOverMenu() {
@@ -846,7 +914,7 @@ var GameOverMenu = function GameOverMenu() {
 exports.default = GameOverMenu;
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -891,7 +959,7 @@ var NuclearRocket = function (_Rocket) {
 exports.default = NuclearRocket;
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -953,7 +1021,7 @@ var OrbitalTrack = function () {
 exports.default = OrbitalTrack;
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -977,11 +1045,11 @@ var _DoubleRocket = __webpack_require__(8);
 
 var _DoubleRocket2 = _interopRequireDefault(_DoubleRocket);
 
-var _UltraRocket = __webpack_require__(15);
+var _UltraRocket = __webpack_require__(16);
 
 var _UltraRocket2 = _interopRequireDefault(_UltraRocket);
 
-var _NuclearRocket = __webpack_require__(10);
+var _NuclearRocket = __webpack_require__(11);
 
 var _NuclearRocket2 = _interopRequireDefault(_NuclearRocket);
 
@@ -990,13 +1058,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var RocketLauncher = function () {
-    function RocketLauncher(parent) {
+    function RocketLauncher(owner) {
         _classCallCheck(this, RocketLauncher);
 
-        this.parent = parent;
+        this.owner = owner;
 
         this.rocketType = 'basic';
         this.rocketPool = [];
+        this.explosionPool = [];
 
         this.cooldown = false;
     }
@@ -1012,19 +1081,19 @@ var RocketLauncher = function () {
 
                 switch (this.rocketType) {
                     case 'basic':
-                        rocket = new _BasicRocket2.default(this.parent.x, this.parent.y, angle, this.parent);
+                        rocket = new _BasicRocket2.default(this.owner.x, this.owner.y, angle, this);
                         break;
                     case 'double':
-                        rocket = new _DoubleRocket2.default(this.parent.x, this.parent.y, angle, this.parent);
+                        rocket = new _DoubleRocket2.default(this.owner.x, this.owner.y, angle, this);
                         break;
                     case 'ultra':
-                        rocket = new _UltraRocket2.default(this.parent.x, this.parent.y, angle, this.parent);
+                        rocket = new _UltraRocket2.default(this.owner.x, this.owner.y, angle, this);
                         break;
                     case 'nuclear':
-                        rocket = new _NuclearRocket2.default(this.parent.x, this.parent.y, angle, this.parent);
+                        rocket = new _NuclearRocket2.default(this.owner.x, this.owner.y, angle, this);
                         break;
                     default:
-                        rocket = new _BasicRocket2.default(this.parent.x, this.parent.y, angle, this.parent);
+                        rocket = new _BasicRocket2.default(this.owner.x, this.owner.y, angle, this);
                         break;
                 }
 
@@ -1050,6 +1119,14 @@ var RocketLauncher = function () {
                     this.rocketPool[i].update();
                 } else {
                     this.rocketPool.splice(i, 1);
+                }
+            }
+
+            for (i in this.explosionPool) {
+                if (this.explosionPool[i].live) {
+                    this.explosionPool[i].update();
+                } else {
+                    this.explosionPool.splice(i, 1);
                 }
             }
         }
@@ -1084,7 +1161,7 @@ var RocketLauncher = function () {
 exports.default = RocketLauncher;
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1152,7 +1229,7 @@ var Scoreboard = function () {
             }
 
             if (this.lastPoints !== this.points) {
-                if (this.lastPoints < 1000 && this.points >= 1000 || this.lastPoints < 2000 && this.points >= 2000 || this.lastPoints < 4000 && this.points >= 4000) {
+                if (this.lastPoints < 2500 && this.points >= 2500 || this.lastPoints < 10000 && this.points >= 10000 || this.lastPoints < 25000 && this.points >= 25000) {
                     asmallworld.upgradeWeapon();
                 }
                 this.lastPoints = this.points;
@@ -1167,7 +1244,7 @@ var Scoreboard = function () {
 exports.default = Scoreboard;
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1198,7 +1275,7 @@ var Sun = function Sun(x, y) {
 exports.default = Sun;
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1243,7 +1320,7 @@ var UltraRocket = function (_Rocket) {
 exports.default = UltraRocket;
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1262,7 +1339,7 @@ function addEvent(obj, evt, fn) {
 }
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1271,7 +1348,7 @@ function addEvent(obj, evt, fn) {
 game.load.spritesheet('asmallworld', 'assets/asmallworld.png', 16, 16);
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1280,7 +1357,7 @@ game.load.spritesheet('asmallworld', 'assets/asmallworld.png', 16, 16);
 game.load.image('crosshair-normal', 'assets/crosshair-normal.png');
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1289,7 +1366,7 @@ game.load.image('crosshair-normal', 'assets/crosshair-normal.png');
 game.load.spritesheet('asteroid', 'assets/asteroid.png', 16, 16);
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1299,7 +1376,7 @@ game.load.image('space', 'assets/space.png');
 game.load.spritesheet('sun', 'assets/sun.png', 64, 64);
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1308,7 +1385,7 @@ game.load.spritesheet('sun', 'assets/sun.png', 64, 64);
 game.load.spritesheet('rocket', 'assets/rocket.png', 8, 16);
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1318,15 +1395,15 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _preload = __webpack_require__(24);
+var _preload = __webpack_require__(25);
 
 var _preload2 = _interopRequireDefault(_preload);
 
-var _create = __webpack_require__(23);
+var _create = __webpack_require__(24);
 
 var _create2 = _interopRequireDefault(_create);
 
-var _update = __webpack_require__(25);
+var _update = __webpack_require__(26);
 
 var _update2 = _interopRequireDefault(_update);
 
@@ -1341,7 +1418,7 @@ gameOverState.prototype.update = _update2.default;
 exports.default = gameOverState;
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1356,7 +1433,7 @@ var _Crosshair = __webpack_require__(1);
 
 var _Crosshair2 = _interopRequireDefault(_Crosshair);
 
-var _GameOverMenu = __webpack_require__(9);
+var _GameOverMenu = __webpack_require__(10);
 
 var _GameOverMenu2 = _interopRequireDefault(_GameOverMenu);
 
@@ -1377,7 +1454,7 @@ function create() {
 }
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1390,7 +1467,7 @@ exports.default = preload;
 function preload() {}
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1403,7 +1480,7 @@ exports.default = update;
 function update() {}
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1413,15 +1490,15 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _preload = __webpack_require__(28);
+var _preload = __webpack_require__(29);
 
 var _preload2 = _interopRequireDefault(_preload);
 
-var _create = __webpack_require__(27);
+var _create = __webpack_require__(28);
 
 var _create2 = _interopRequireDefault(_create);
 
-var _update = __webpack_require__(29);
+var _update = __webpack_require__(30);
 
 var _update2 = _interopRequireDefault(_update);
 
@@ -1436,7 +1513,7 @@ playingState.prototype.update = _update2.default;
 exports.default = playingState;
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1482,7 +1559,7 @@ exports.default = function () {
     window.scoreboard = new _Scoreboard2.default();
 };
 
-var _Sun = __webpack_require__(14);
+var _Sun = __webpack_require__(15);
 
 var _Sun2 = _interopRequireDefault(_Sun);
 
@@ -1502,14 +1579,14 @@ var _Controller = __webpack_require__(7);
 
 var _Controller2 = _interopRequireDefault(_Controller);
 
-var _Scoreboard = __webpack_require__(13);
+var _Scoreboard = __webpack_require__(14);
 
 var _Scoreboard2 = _interopRequireDefault(_Scoreboard);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1522,15 +1599,15 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = function () {
 
     // get assets
-    __webpack_require__(20);
-    __webpack_require__(17);
-    __webpack_require__(18);
     __webpack_require__(21);
+    __webpack_require__(18);
     __webpack_require__(19);
+    __webpack_require__(22);
+    __webpack_require__(20);
 };
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1549,7 +1626,7 @@ exports.default = function () {
 };
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
