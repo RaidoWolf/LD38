@@ -592,7 +592,6 @@ var Controller = function () {
 
         this.cursor = cursor;
         this.player = player;
-        this.leftButtonWasDown = false;
 
         game.input.mouse.capture = true;
     }
@@ -607,15 +606,8 @@ var Controller = function () {
         key: "update",
         value: function update() {
 
-            if (!this.leftButtonWasDown) {
-                if (game.input.activePointer.leftButton.isDown) {
-                    this.player.fireWeapon(this.getPlayerAngleToCursor());
-                    this.leftButtonWasDown = true;
-                }
-            } else {
-                if (!game.input.activePointer.leftButton.isDown) {
-                    this.leftButtonWasDown = false;
-                }
+            if (game.input.activePointer.leftButton.isDown) {
+                this.player.fireWeapon(this.getPlayerAngleToCursor());
             }
         }
     }]);

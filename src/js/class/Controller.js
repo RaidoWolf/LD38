@@ -4,7 +4,6 @@ export default class Controller {
 
         this.cursor = cursor;
         this.player = player;
-        this.leftButtonWasDown = false;
 
         game.input.mouse.capture = true;
 
@@ -21,15 +20,8 @@ export default class Controller {
 
     update () {
 
-        if (!this.leftButtonWasDown) {
-            if (game.input.activePointer.leftButton.isDown) {
-                this.player.fireWeapon(this.getPlayerAngleToCursor());
-                this.leftButtonWasDown = true;
-            }
-        } else {
-            if (!game.input.activePointer.leftButton.isDown) {
-                this.leftButtonWasDown = false;
-            }
+        if (game.input.activePointer.leftButton.isDown) {
+            this.player.fireWeapon(this.getPlayerAngleToCursor());
         }
 
     }
