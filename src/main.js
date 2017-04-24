@@ -202,8 +202,6 @@ var Crosshair = function () {
     function Crosshair() {
         _classCallCheck(this, Crosshair);
 
-        console.log('slkdfjsdlkj');
-
         var self = this;
 
         // create the sprite
@@ -1289,14 +1287,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function create() {
 
-    window.crosshair = new _Crosshair2.default();
-
     window.environment = game.add.group();
     window.menu = game.add.group();
     window.gui = game.add.group();
 
     window.background = game.add.tileSprite(0, 0, game.world.width, game.world.height, 'space');
     environment.add(background);
+
+    window.crosshair = new _Crosshair2.default();
 }
 
 /***/ }),
