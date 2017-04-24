@@ -55,7 +55,7 @@ export default class AsteroidEmitter {
             y,
             Math.random() * 2 * Math.PI - Math.PI,
             Math.random() * 2 * Math.PI - Math.PI,
-            Math.log2(Math.random() * Math.pow((this.maxSize - this.minSize), 2)) + this.minSize,
+            Math.log2(Math.random() * Math.pow(2, (this.maxSize - this.minSize))) + this.minSize,
             Math.random() * (this.maxVelocity - this.minVelocity) + this.minVelocity
         ));
 
