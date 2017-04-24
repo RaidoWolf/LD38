@@ -115,7 +115,7 @@ var Rocket = function () {
             this.sprite.animations.add('default', this.frames);
             this.sprite.animations.play('default', 3, true);
 
-            this.sprite.angle = angle * (180 / Math.PI);
+            this.sprite.angle = angle * (180 / Math.PI) + 90;
 
             game.physics.arcade.enable(this.sprite);
             this.sprite.body.enable = true;
