@@ -84,7 +84,7 @@ export default class Rocket {
                 Math.pow(this.y - asteroidEmitter.asteroidPool[i].y, 2)
             );
 
-            if (dist2 < 10000) {
+            if (dist2 < Math.pow(32 * gameScaleBase * asteroidEmitter.asteroidPool[i].size, 2)) {
                 scoreboard.points += Math.round(asteroidEmitter.asteroidPool[i].size * 10);
                 this.destroy();
                 asteroidEmitter.asteroidPool[i].destroy();

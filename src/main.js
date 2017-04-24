@@ -145,7 +145,7 @@ var Rocket = function () {
             for (var i in asteroidEmitter.asteroidPool) {
                 var dist2 = Math.abs(Math.pow(this.x - asteroidEmitter.asteroidPool[i].x, 2)) + Math.abs(Math.pow(this.y - asteroidEmitter.asteroidPool[i].y, 2));
 
-                if (dist2 < 10000) {
+                if (dist2 < Math.pow(32 * gameScaleBase * asteroidEmitter.asteroidPool[i].size, 2)) {
                     scoreboard.points += Math.round(asteroidEmitter.asteroidPool[i].size * 10);
                     this.destroy();
                     asteroidEmitter.asteroidPool[i].destroy();
@@ -1057,7 +1057,7 @@ var Scoreboard = function () {
                     if (asteroidEmitter.minSize < 2) {
                         asteroidEmitter.minSize += 0.1;
                     }
-                    if (asteroidEmitter.maxSize < 8) {
+                    if (asteroidEmitter.maxSize < 6) {
                         asteroidEmitter.maxSize += 0.2;
                     }
                 }
@@ -1066,7 +1066,7 @@ var Scoreboard = function () {
             }
 
             if (this.lastPoints !== this.points) {
-                if (this.lastPoints < 1000 && this.points >= 1000 || this.lastPoints < 2000 && this.points >= 2000 || this.lastPoints < 4000 && this.points >= 4000 || this.lastPoints < 8000 && this.points >= 8000) {
+                if (this.lastPoints < 1000 && this.points >= 1000 || this.lastPoints < 2000 && this.points >= 2000 || this.lastPoints < 4000 && this.points >= 4000) {
                     asmallworld.upgradeWeapon();
                 }
                 this.lastPoints = this.points;
