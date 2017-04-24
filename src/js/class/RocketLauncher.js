@@ -13,31 +13,49 @@ export default class RocketLauncher {
         this.rocketType = 'basic';
         this.rocketPool = [];
 
+        this.cooldown = false;
+
     }
 
     fire (angle) {
 
-        var rocket;
+        if (!this.cooldown) {
 
-        switch (this.rocketType) {
-            case 'basic':
-                rocket = new BasicRocket(this.parent.x, this.parent.y, angle, this.parent);
-                break;
-            case 'double':
-                rocket = new DoubleRocket(this.parent.x, this.parent.y, angle, this.parent);
-                break;
-            case 'ultra':
-                rocket = new UltraRocket(this.parent.x, this.parent.y, angle, this.parent);
-                break;
-            case 'nuclear':
-                rocket = new NuclearRocket(this.parent.x, this.parent.y, angle, this.parent);
-                break;
-            default:
-                rocket = new BasicRocket(this.parent.x, this.parent.y, angle, this.parent);
-                break;
+            var self = this;
+            var rocket;
+
+            switch (this.rocketType) {
+                case 'basic':
+                    rocket = new BasicRocket(this.parent.x, this.parent.y, angle, this.parent);
+                    break;
+                case 'double':
+                    rocket = new DoubleRocket(this.parent.x, this.parent.y, angle, this.parent);
+                    break;
+                case 'ultra':
+                    rocket = new UltraRocket(this.parent.x, this.parent.y, angle, this.parent);
+                    break;
+                case 'nuclear':
+                    rocket = new NuclearRocket(this.parent.x, this.parent.y, angle, this.parent);
+                    break;
+                default:
+                    rocket = new BasicRocket(this.parent.x, this.parent.y, angle, this.parent);
+                    break;
+            }
+
+            this.rocketPool.push(rocket);
+
+            this.cooldown = true;
+            window.setTimeout(function () {
+                self.cooldown = false;
+            }, 250);
+
+            return true;
+
+        } else {
+
+            return false;
+
         }
-
-        this.rocketPool.push(rocket);
 
     }
 

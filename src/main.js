@@ -721,33 +721,49 @@ var RocketLauncher = function () {
 
         this.rocketType = 'basic';
         this.rocketPool = [];
+
+        this.cooldown = false;
     }
 
     _createClass(RocketLauncher, [{
         key: 'fire',
         value: function fire(angle) {
 
-            var rocket;
+            if (!this.cooldown) {
 
-            switch (this.rocketType) {
-                case 'basic':
-                    rocket = new _BasicRocket2.default(this.parent.x, this.parent.y, angle, this.parent);
-                    break;
-                case 'double':
-                    rocket = new _DoubleRocket2.default(this.parent.x, this.parent.y, angle, this.parent);
-                    break;
-                case 'ultra':
-                    rocket = new _UltraRocket2.default(this.parent.x, this.parent.y, angle, this.parent);
-                    break;
-                case 'nuclear':
-                    rocket = new _NuclearRocket2.default(this.parent.x, this.parent.y, angle, this.parent);
-                    break;
-                default:
-                    rocket = new _BasicRocket2.default(this.parent.x, this.parent.y, angle, this.parent);
-                    break;
+                var self = this;
+                var rocket;
+
+                switch (this.rocketType) {
+                    case 'basic':
+                        rocket = new _BasicRocket2.default(this.parent.x, this.parent.y, angle, this.parent);
+                        break;
+                    case 'double':
+                        rocket = new _DoubleRocket2.default(this.parent.x, this.parent.y, angle, this.parent);
+                        break;
+                    case 'ultra':
+                        rocket = new _UltraRocket2.default(this.parent.x, this.parent.y, angle, this.parent);
+                        break;
+                    case 'nuclear':
+                        rocket = new _NuclearRocket2.default(this.parent.x, this.parent.y, angle, this.parent);
+                        break;
+                    default:
+                        rocket = new _BasicRocket2.default(this.parent.x, this.parent.y, angle, this.parent);
+                        break;
+                }
+
+                this.rocketPool.push(rocket);
+
+                this.cooldown = true;
+                window.setTimeout(function () {
+                    self.cooldown = false;
+                }, 250);
+
+                return true;
+            } else {
+
+                return false;
             }
-
-            this.rocketPool.push(rocket);
         }
     }, {
         key: 'update',
