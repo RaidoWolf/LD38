@@ -31,6 +31,9 @@ export default class ASmallWorld {
         this.orbitalPhase = 0;
         this.initOrbitalTrack();
 
+        this.health = 10;
+        this.maxHealth = 10;
+
     }
 
     get x () {

@@ -5,5 +5,6 @@ export default function () {
     require('./loading/asmallworld.js');
     require('./loading/crosshair.js');
     require('./loading/projectile.js');
+    require('./loading/enemies.js');
 
 }

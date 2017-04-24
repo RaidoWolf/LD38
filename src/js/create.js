@@ -25,6 +25,6 @@ export default function () {
     window.controller = new Controller(crosshair, asmallworld);
 
     // initialize the Scoreboard
-    window.scoreboard = new Scoreboard();
+    window.scoreboard = new Scoreboard(asmallworld);
 
 }

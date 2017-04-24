@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 21);
+/******/ 	return __webpack_require__(__webpack_require__.s = 22);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -177,7 +177,7 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _preload = __webpack_require__(19);
+var _preload = __webpack_require__(20);
 
 var _preload2 = _interopRequireDefault(_preload);
 
@@ -185,7 +185,7 @@ var _create = __webpack_require__(13);
 
 var _create2 = _interopRequireDefault(_create);
 
-var _update = __webpack_require__(20);
+var _update = __webpack_require__(21);
 
 var _update2 = _interopRequireDefault(_update);
 
@@ -262,6 +262,9 @@ var ASmallWorld = function () {
         this.orbitalOrigin = [x, y];
         this.orbitalPhase = 0;
         this.initOrbitalTrack();
+
+        this.health = 10;
+        this.maxHealth = 10;
     }
 
     _createClass(ASmallWorld, [{
@@ -823,7 +826,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Scoreboard = function () {
-    function Scoreboard() {
+    function Scoreboard(player) {
         _classCallCheck(this, Scoreboard);
 
         this.lastTime = null;
@@ -834,7 +837,7 @@ var Scoreboard = function () {
         this.time = 0; // seconds survived
         this.points = 0; // arbitrary score (decreases with upgrades)
         this.damage = 0; // arbitrary damage points done in game
-        this.health = 10; // arbitrary health points. When you run out, the game is over.
+        this.player = player; // this is where we get health from
 
         this.textTime = game.add.text(16, 16, 'TIME: 0', { fontSize: '24px', fill: '#ffffff' });
         this.textPoints = game.add.text(16, 56, 'POINTS: 0', { fontSize: '16px', fill: '#ffffff' });
@@ -865,9 +868,9 @@ var Scoreboard = function () {
                 this.lastDamage = this.damage;
                 this.textDamage.text = 'DAMAGE: ' + this.damage;
             }
-            if (this.lastHealth !== this.health) {
-                this.lastHealth = this.health;
-                this.textHealth.text = 'HEALTH: ' + this.health;
+            if (this.lastHealth !== this.player.health) {
+                this.lastHealth = this.player.health;
+                this.textHealth.text = 'HEALTH: ' + this.player.health;
             }
         }
     }]);
@@ -984,7 +987,7 @@ exports.default = function () {
     window.controller = new _Controller2.default(crosshair, asmallworld);
 
     // initialize the Scoreboard
-    window.scoreboard = new _Scoreboard2.default();
+    window.scoreboard = new _Scoreboard2.default(asmallworld);
 };
 
 var _Sun = __webpack_require__(11);
@@ -1053,8 +1056,7 @@ game.load.image('crosshair-normal', 'assets/crosshair-normal.png');
 "use strict";
 
 
-game.load.image('space', 'assets/space.png');
-game.load.spritesheet('sun', 'assets/sun.png', 64, 64);
+game.load.spritesheet('asteroid', 'assets/asteroid.png', 16, 16);
 
 /***/ }),
 /* 18 */
@@ -1063,10 +1065,20 @@ game.load.spritesheet('sun', 'assets/sun.png', 64, 64);
 "use strict";
 
 
-game.load.spritesheet('rocket', 'assets/rocket.png', 8, 16);
+game.load.image('space', 'assets/space.png');
+game.load.spritesheet('sun', 'assets/sun.png', 64, 64);
 
 /***/ }),
 /* 19 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+game.load.spritesheet('rocket', 'assets/rocket.png', 8, 16);
+
+/***/ }),
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1079,14 +1091,15 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = function () {
 
     // get assets
-    __webpack_require__(17);
+    __webpack_require__(18);
     __webpack_require__(15);
     __webpack_require__(16);
-    __webpack_require__(18);
+    __webpack_require__(19);
+    __webpack_require__(17);
 };
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1104,7 +1117,7 @@ exports.default = function () {
 };
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
