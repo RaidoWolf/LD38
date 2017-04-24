@@ -77,6 +77,19 @@ export default class Rocket {
         this.sprite.body.velocity.y =
             this.velocity * gameScaleBase * Math.sin(this.angle);
 
+        for (var i in asteroidEmitter.asteroidPool) {
+            var dist2 = Math.abs(
+                Math.pow(this.x - asteroidEmitter.asteroidPool[i].x, 2)
+            ) + Math.abs(
+                Math.pow(this.y - asteroidEmitter.asteroidPool[i].y, 2)
+            );
+
+            if (dist2 < 10000) {
+                this.destroy();
+                asteroidEmitter.asteroidPool[i].destroy();
+            }
+        }
+
     }
 
 }

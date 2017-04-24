@@ -141,6 +141,15 @@ var Rocket = function () {
 
             this.sprite.body.velocity.x = this.velocity * gameScaleBase * Math.cos(this.angle);
             this.sprite.body.velocity.y = this.velocity * gameScaleBase * Math.sin(this.angle);
+
+            for (var i in asteroidEmitter.asteroidPool) {
+                var dist2 = Math.abs(Math.pow(this.x - asteroidEmitter.asteroidPool[i].x, 2)) + Math.abs(Math.pow(this.y - asteroidEmitter.asteroidPool[i].y, 2));
+
+                if (dist2 < 10000) {
+                    this.destroy();
+                    asteroidEmitter.asteroidPool[i].destroy();
+                }
+            }
         }
     }, {
         key: 'x',
@@ -370,13 +379,11 @@ var Asteroid = function () {
 
         this.sprite.anchor.setTo(0.5, 0.5);
 
-        this.sprite.scale.setTo(gameScaleBase * size * 3, gameScaleBase * size * 3);
-
         game.physics.arcade.enable(this.sprite);
         this.sprite.body.enable = true;
         this.sprite.body.collideWorldBounds = false;
-        this.sprite.body.bounce.x = 0.5;
-        this.sprite.body.bounce.y = 0.5;
+
+        this.sprite.scale.setTo(gameScaleBase * size * 3, gameScaleBase * size * 3);
 
         this.sprite.body.velocity.x = this.velocity * gameScaleBase * Math.cos(this.angle);
         this.sprite.body.velocity.y = this.velocity * gameScaleBase * Math.sin(this.angle);
@@ -1099,15 +1106,6 @@ var Sun = function Sun(x, y) {
 
     this.sprite.animations.add('default');
     this.sprite.animations.play('default', 10, true);
-
-    game.physics.arcade.enable(this.sprite);
-    this.sprite.body.enable = true;
-    this.sprite.body.collideWorldBounds = false;
-    this.sprite.body.immoveable = true;
-    this.sprite.body.moves = false;
-    this.sprite.body.allowGravity = false;
-    this.sprite.body.bounce.x = 0.5;
-    this.sprite.body.bounce.y = 0.5;
 };
 
 exports.default = Sun;
