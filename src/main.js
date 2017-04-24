@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 25);
+/******/ 	return __webpack_require__(__webpack_require__.s = 29);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -188,9 +188,115 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _playing = __webpack_require__(21);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _addEvent = __webpack_require__(16);
+
+var _addEvent2 = _interopRequireDefault(_addEvent);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Crosshair = function () {
+    function Crosshair() {
+        _classCallCheck(this, Crosshair);
+
+        var self = this;
+
+        // create the sprite
+        this.sprite = game.add.sprite(-100, -100, 'crosshair-normal');
+        gui.add(this.sprite);
+        this.sprite.anchor.setTo(0.5, 0.5);
+        this.sprite.scale.setTo(1, 1);
+
+        // track mouse movement
+        game.input.addMoveCallback(function (pointer, x, y) {
+            self.update(pointer, x, y);
+        });
+
+        // detect when mouse leaves screen
+        (0, _addEvent2.default)(document, 'mouseout', function () {
+            self.hide();
+        });
+
+        // detect when mouse re-enters screen
+        (0, _addEvent2.default)(document, 'mouseover', function () {
+            self.show();
+        });
+    }
+
+    _createClass(Crosshair, [{
+        key: 'hide',
+        value: function hide() {
+            this.sprite.visible = false;
+        }
+    }, {
+        key: 'show',
+        value: function show() {
+            this.sprite.visible = true;
+        }
+
+        // mouse movement callback
+
+    }, {
+        key: 'update',
+        value: function update(pointer, x, y) {
+            this.sprite.x = x;
+            this.sprite.y = y;
+        }
+    }, {
+        key: 'x',
+        get: function get() {
+            return this.sprite.x;
+        },
+        set: function set(x) {
+            this.sprite.x = x;
+            return true;
+        }
+    }, {
+        key: 'y',
+        get: function get() {
+            return this.sprite.y;
+        },
+        set: function set(y) {
+            this.sprite.y = y;
+            return true;
+        }
+    }]);
+
+    return Crosshair;
+}();
+
+exports.default = Crosshair;
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+game.load.image('crosshair-normal', 'assets/crosshair-normal.png');
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _playing = __webpack_require__(25);
 
 var _playing2 = _interopRequireDefault(_playing);
+
+var _gameover = __webpack_require__(21);
+
+var _gameover2 = _interopRequireDefault(_gameover);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -205,6 +311,7 @@ false //disable anti-aliasing
 );
 
 game.state.add('playing', _playing2.default);
+game.state.add('gameover', _gameover2.default);
 
 game.state.start('playing');
 
@@ -214,7 +321,7 @@ window.gameScaleBase = largestDimension / 800;
 exports.default = window.game;
 
 /***/ }),
-/* 2 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -226,11 +333,11 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _OrbitalTrack = __webpack_require__(10);
+var _OrbitalTrack = __webpack_require__(11);
 
 var _OrbitalTrack2 = _interopRequireDefault(_OrbitalTrack);
 
-var _RocketLauncher = __webpack_require__(11);
+var _RocketLauncher = __webpack_require__(12);
 
 var _RocketLauncher2 = _interopRequireDefault(_RocketLauncher);
 
@@ -311,7 +418,7 @@ var ASmallWorld = function () {
                 var dist2 = Math.abs(Math.pow(this.x - asteroidEmitter.asteroidPool[i].x, 2)) + Math.abs(Math.pow(this.y - asteroidEmitter.asteroidPool[i].y, 2));
 
                 if (dist2 < Math.pow(24 * gameScaleBase * asteroidEmitter.asteroidPool[i].size, 2)) {
-                    console.log('game over');
+                    game.state.start('gameover');
                 }
             }
 
@@ -348,7 +455,7 @@ var ASmallWorld = function () {
 exports.default = ASmallWorld;
 
 /***/ }),
-/* 3 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -429,7 +536,7 @@ var Asteroid = function () {
 exports.default = Asteroid;
 
 /***/ }),
-/* 4 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -441,7 +548,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _Asteroid = __webpack_require__(3);
+var _Asteroid = __webpack_require__(5);
 
 var _Asteroid2 = _interopRequireDefault(_Asteroid);
 
@@ -539,7 +646,7 @@ var AsteroidEmitter = function () {
 exports.default = AsteroidEmitter;
 
 /***/ }),
-/* 5 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -584,7 +691,7 @@ var BasicRocket = function (_Rocket) {
 exports.default = BasicRocket;
 
 /***/ }),
-/* 6 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -630,100 +737,7 @@ var Controller = function () {
 exports.default = Controller;
 
 /***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _addEvent = __webpack_require__(15);
-
-var _addEvent2 = _interopRequireDefault(_addEvent);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Crosshair = function () {
-    function Crosshair() {
-        _classCallCheck(this, Crosshair);
-
-        var self = this;
-
-        // create the sprite
-        this.sprite = game.add.sprite(-100, -100, 'crosshair-normal');
-        gui.add(this.sprite);
-        this.sprite.anchor.setTo(0.5, 0.5);
-        this.sprite.scale.setTo(1, 1);
-
-        // track mouse movement
-        game.input.addMoveCallback(function (pointer, x, y) {
-            self.update(pointer, x, y);
-        });
-
-        // detect when mouse leaves screen
-        (0, _addEvent2.default)(document, 'mouseout', function () {
-            self.hide();
-        });
-
-        // detect when mouse re-enters screen
-        (0, _addEvent2.default)(document, 'mouseover', function () {
-            self.show();
-        });
-    }
-
-    _createClass(Crosshair, [{
-        key: 'hide',
-        value: function hide() {
-            this.sprite.visible = false;
-        }
-    }, {
-        key: 'show',
-        value: function show() {
-            this.sprite.visible = true;
-        }
-
-        // mouse movement callback
-
-    }, {
-        key: 'update',
-        value: function update(pointer, x, y) {
-            this.sprite.x = x;
-            this.sprite.y = y;
-        }
-    }, {
-        key: 'x',
-        get: function get() {
-            return this.sprite.x;
-        },
-        set: function set(x) {
-            this.sprite.x = x;
-            return true;
-        }
-    }, {
-        key: 'y',
-        get: function get() {
-            return this.sprite.y;
-        },
-        set: function set(y) {
-            this.sprite.y = y;
-            return true;
-        }
-    }]);
-
-    return Crosshair;
-}();
-
-exports.default = Crosshair;
-
-/***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -768,7 +782,7 @@ var DoubleRocket = function (_Rocket) {
 exports.default = DoubleRocket;
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -813,7 +827,7 @@ var NuclearRocket = function (_Rocket) {
 exports.default = NuclearRocket;
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -875,7 +889,7 @@ var OrbitalTrack = function () {
 exports.default = OrbitalTrack;
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -891,19 +905,19 @@ var _Rocket = __webpack_require__(0);
 
 var _Rocket2 = _interopRequireDefault(_Rocket);
 
-var _BasicRocket = __webpack_require__(5);
+var _BasicRocket = __webpack_require__(7);
 
 var _BasicRocket2 = _interopRequireDefault(_BasicRocket);
 
-var _DoubleRocket = __webpack_require__(8);
+var _DoubleRocket = __webpack_require__(9);
 
 var _DoubleRocket2 = _interopRequireDefault(_DoubleRocket);
 
-var _UltraRocket = __webpack_require__(14);
+var _UltraRocket = __webpack_require__(15);
 
 var _UltraRocket2 = _interopRequireDefault(_UltraRocket);
 
-var _NuclearRocket = __webpack_require__(9);
+var _NuclearRocket = __webpack_require__(10);
 
 var _NuclearRocket2 = _interopRequireDefault(_NuclearRocket);
 
@@ -1006,7 +1020,7 @@ var RocketLauncher = function () {
 exports.default = RocketLauncher;
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1089,7 +1103,7 @@ var Scoreboard = function () {
 exports.default = Scoreboard;
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1120,7 +1134,7 @@ var Sun = function Sun(x, y) {
 exports.default = Sun;
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1165,7 +1179,7 @@ var UltraRocket = function (_Rocket) {
 exports.default = UltraRocket;
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1184,22 +1198,13 @@ function addEvent(obj, evt, fn) {
 }
 
 /***/ }),
-/* 16 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-game.load.spritesheet('asmallworld', 'assets/asmallworld.png', 16, 16);
-
-/***/ }),
 /* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-game.load.image('crosshair-normal', 'assets/crosshair-normal.png');
+game.load.spritesheet('asmallworld', 'assets/asmallworld.png', 16, 16);
 
 /***/ }),
 /* 18 */
@@ -1254,6 +1259,92 @@ var _update2 = _interopRequireDefault(_update);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function gameOverState() {}
+
+gameOverState.prototype.preload = _preload2.default;
+gameOverState.prototype.create = _create2.default;
+gameOverState.prototype.update = _update2.default;
+
+exports.default = gameOverState;
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = create;
+
+var _Crosshair = __webpack_require__(1);
+
+var _Crosshair2 = _interopRequireDefault(_Crosshair);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function create() {
+
+    window.crosshair = new _Crosshair2.default();
+}
+
+/***/ }),
+/* 23 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = preload;
+function preload() {
+
+    // get assets
+    __webpack_require__(2);
+}
+
+/***/ }),
+/* 24 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = update;
+function update() {}
+
+/***/ }),
+/* 25 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _preload = __webpack_require__(27);
+
+var _preload2 = _interopRequireDefault(_preload);
+
+var _create = __webpack_require__(26);
+
+var _create2 = _interopRequireDefault(_create);
+
+var _update = __webpack_require__(28);
+
+var _update2 = _interopRequireDefault(_update);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function playingState() {}
 
 playingState.prototype.preload = _preload2.default;
@@ -1263,7 +1354,7 @@ playingState.prototype.update = _update2.default;
 exports.default = playingState;
 
 /***/ }),
-/* 22 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1308,34 +1399,34 @@ exports.default = function () {
     window.scoreboard = new _Scoreboard2.default();
 };
 
-var _Sun = __webpack_require__(13);
+var _Sun = __webpack_require__(14);
 
 var _Sun2 = _interopRequireDefault(_Sun);
 
-var _ASmallWorld = __webpack_require__(2);
+var _ASmallWorld = __webpack_require__(4);
 
 var _ASmallWorld2 = _interopRequireDefault(_ASmallWorld);
 
-var _AsteroidEmitter = __webpack_require__(4);
+var _AsteroidEmitter = __webpack_require__(6);
 
 var _AsteroidEmitter2 = _interopRequireDefault(_AsteroidEmitter);
 
-var _Crosshair = __webpack_require__(7);
+var _Crosshair = __webpack_require__(1);
 
 var _Crosshair2 = _interopRequireDefault(_Crosshair);
 
-var _Controller = __webpack_require__(6);
+var _Controller = __webpack_require__(8);
 
 var _Controller2 = _interopRequireDefault(_Controller);
 
-var _Scoreboard = __webpack_require__(12);
+var _Scoreboard = __webpack_require__(13);
 
 var _Scoreboard2 = _interopRequireDefault(_Scoreboard);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 23 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1349,14 +1440,14 @@ exports.default = function () {
 
     // get assets
     __webpack_require__(19);
-    __webpack_require__(16);
     __webpack_require__(17);
+    __webpack_require__(2);
     __webpack_require__(20);
     __webpack_require__(18);
 };
 
 /***/ }),
-/* 24 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1375,13 +1466,13 @@ exports.default = function () {
 };
 
 /***/ }),
-/* 25 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _game = __webpack_require__(1);
+var _game = __webpack_require__(3);
 
 var _game2 = _interopRequireDefault(_game);
 

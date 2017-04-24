@@ -1,4 +1,5 @@
 import playingState from './state/playing.js';
+import gameOverState from './state/gameover.js';
 
 window.playingState = playingState;
 
@@ -13,6 +14,7 @@ window.game = new Phaser.Game(
 );
 
 game.state.add('playing', playingState);
+game.state.add('gameover', gameOverState);
 
 game.state.start('playing');
 

@@ -99,7 +99,7 @@ export default class ASmallWorld {
             );
 
             if (dist2 < Math.pow(24 * gameScaleBase * asteroidEmitter.asteroidPool[i].size, 2)) {
-                console.log('game over');
+                game.state.start('gameover');
             }
         }
 
