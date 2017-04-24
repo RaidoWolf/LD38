@@ -85,6 +85,8 @@ export default class Rocket {
             );
 
             if (dist2 < 10000) {
+                scoreboard.points += Math.round(asteroidEmitter.asteroidPool[i].size * 10);
+                scoreboard.damage += Math.round(asteroidEmitter.asteroidPool[i].size * 100);
                 this.destroy();
                 asteroidEmitter.asteroidPool[i].destroy();
             }
