@@ -370,14 +370,13 @@ var Asteroid = function () {
 
         this.sprite.anchor.setTo(0.5, 0.5);
 
-        this.sprite.scale.setTo(gameScaleBase * size * 4, gameScaleBase * size * 4);
+        this.sprite.scale.setTo(gameScaleBase * size * 3, gameScaleBase * size * 3);
 
         game.physics.arcade.enable(this.sprite);
         this.sprite.body.enable = true;
-        this.sprite.body.setSize(this.sprite.width * 0.5, this.sprite.height * 0.5, 0, 0);
         this.sprite.body.collideWorldBounds = false;
-        this.sprite.body.bounce.x = 1;
-        this.sprite.body.bounce.y = 1;
+        this.sprite.body.bounce.x = 0.5;
+        this.sprite.body.bounce.y = 0.5;
 
         this.sprite.body.velocity.x = this.velocity * gameScaleBase * Math.cos(this.angle);
         this.sprite.body.velocity.y = this.velocity * gameScaleBase * Math.sin(this.angle);
@@ -1103,11 +1102,12 @@ var Sun = function Sun(x, y) {
 
     game.physics.arcade.enable(this.sprite);
     this.sprite.body.enable = true;
-    this.sprite.body.setSize(this.sprite.width * 0.5, this.sprite.height * 0.5, 0, 0);
     this.sprite.body.collideWorldBounds = false;
     this.sprite.body.immoveable = true;
     this.sprite.body.moves = false;
     this.sprite.body.allowGravity = false;
+    this.sprite.body.bounce.x = 0.5;
+    this.sprite.body.bounce.y = 0.5;
 };
 
 exports.default = Sun;
@@ -1328,8 +1328,8 @@ Object.defineProperty(exports, "__esModule", {
 
 exports.default = function () {
 
-    game.physics.arcade.collide(enemies);
-    game.physics.arcade.collide(enemies, solidEnvironment);
+    //game.physics.arcade.collide(enemies);
+    //game.physics.arcade.collide(enemies, solidEnvironment);
 
     asmallworld.update();
     controller.update();
