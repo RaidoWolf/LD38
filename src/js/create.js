@@ -2,6 +2,7 @@ import Sun from './class/Sun.js';
 import ASmallWorld from './class/ASmallWorld.js';
 import Crosshair from './class/Crosshair.js';
 import Controller from './class/Controller.js';
+import Scoreboard from './class/Scoreboard.js';
 
 export default function () {
 
@@ -22,5 +23,8 @@ export default function () {
 
     // initialize the controller
     window.controller = new Controller(crosshair, asmallworld);
+
+    // initialize the Scoreboard
+    window.scoreboard = new Scoreboard();
 
 }

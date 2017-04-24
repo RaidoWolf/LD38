@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 20);
+/******/ 	return __webpack_require__(__webpack_require__.s = 21);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -177,15 +177,15 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _preload = __webpack_require__(18);
+var _preload = __webpack_require__(19);
 
 var _preload2 = _interopRequireDefault(_preload);
 
-var _create = __webpack_require__(12);
+var _create = __webpack_require__(13);
 
 var _create2 = _interopRequireDefault(_create);
 
-var _update = __webpack_require__(19);
+var _update = __webpack_require__(20);
 
 var _update2 = _interopRequireDefault(_update);
 
@@ -445,7 +445,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _addEvent = __webpack_require__(13);
+var _addEvent = __webpack_require__(14);
 
 var _addEvent2 = _interopRequireDefault(_addEvent);
 
@@ -701,7 +701,7 @@ var _DoubleRocket = __webpack_require__(6);
 
 var _DoubleRocket2 = _interopRequireDefault(_DoubleRocket);
 
-var _UltraRocket = __webpack_require__(11);
+var _UltraRocket = __webpack_require__(12);
 
 var _UltraRocket2 = _interopRequireDefault(_UltraRocket);
 
@@ -818,6 +818,76 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Scoreboard = function () {
+    function Scoreboard() {
+        _classCallCheck(this, Scoreboard);
+
+        this.lastTime = null;
+        this.lastPoints = null;
+        this.lastDamage = null;
+        this.lastHealth = null;
+
+        this.time = 0; // seconds survived
+        this.points = 0; // arbitrary score (decreases with upgrades)
+        this.damage = 0; // arbitrary damage points done in game
+        this.health = 10; // arbitrary health points. When you run out, the game is over.
+
+        this.textTime = game.add.text(16, 16, 'TIME: 0', { fontSize: '24px', fill: '#ffffff' });
+        this.textPoints = game.add.text(16, 56, 'POINTS: 0', { fontSize: '16px', fill: '#ffffff' });
+        this.textDamage = game.add.text(16, 88, 'DAMAGE: 0', { fontSize: '16px', fill: '#ffffff' });
+        this.textHealth = game.add.text(16, 120, 'HEALTH: 10', { fontSize: '24px', fill: '#ffffff' });
+
+        var updateCount = 0;
+    }
+
+    _createClass(Scoreboard, [{
+        key: 'update',
+        value: function update() {
+
+            if (++this.updateCount >= '60') {
+                this.updateCount = 0;
+                this.time++;
+            }
+
+            if (this.lastTime !== this.time) {
+                this.lastTime = this.time;
+                this.textTime.text = 'TIME: ' + this.time;
+            }
+            if (this.lastPoints !== this.points) {
+                this.lastPoints = this.points;
+                this.textPoints.text = 'POINTS: ' + this.points;
+            }
+            if (this.lastDamage !== this.damage) {
+                this.lastDamage = this.damage;
+                this.textDamage.text = 'DAMAGE: ' + this.damage;
+            }
+            if (this.lastHealth !== this.health) {
+                this.lastHealth = this.health;
+                this.textHealth.text = 'HEALTH: ' + this.health;
+            }
+        }
+    }]);
+
+    return Scoreboard;
+}();
+
+exports.default = Scoreboard;
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Sun = function Sun(x, y) {
@@ -838,7 +908,7 @@ var Sun = function Sun(x, y) {
 exports.default = Sun;
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -883,7 +953,7 @@ var UltraRocket = function (_Rocket) {
 exports.default = UltraRocket;
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -912,9 +982,12 @@ exports.default = function () {
 
     // initialize the controller
     window.controller = new _Controller2.default(crosshair, asmallworld);
+
+    // initialize the Scoreboard
+    window.scoreboard = new _Scoreboard2.default();
 };
 
-var _Sun = __webpack_require__(10);
+var _Sun = __webpack_require__(11);
 
 var _Sun2 = _interopRequireDefault(_Sun);
 
@@ -930,10 +1003,14 @@ var _Controller = __webpack_require__(4);
 
 var _Controller2 = _interopRequireDefault(_Controller);
 
+var _Scoreboard = __webpack_require__(10);
+
+var _Scoreboard2 = _interopRequireDefault(_Scoreboard);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -952,7 +1029,7 @@ function addEvent(obj, evt, fn) {
 }
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -961,7 +1038,7 @@ function addEvent(obj, evt, fn) {
 game.load.spritesheet('asmallworld', 'assets/asmallworld.png', 16, 16);
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -970,7 +1047,7 @@ game.load.spritesheet('asmallworld', 'assets/asmallworld.png', 16, 16);
 game.load.image('crosshair-normal', 'assets/crosshair-normal.png');
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -980,33 +1057,13 @@ game.load.image('space', 'assets/space.png');
 game.load.spritesheet('sun', 'assets/sun.png', 64, 64);
 
 /***/ }),
-/* 17 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-game.load.spritesheet('rocket', 'assets/rocket.png', 8, 16);
-
-/***/ }),
 /* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-exports.default = function () {
-
-    // get assets
-    __webpack_require__(16);
-    __webpack_require__(14);
-    __webpack_require__(15);
-    __webpack_require__(17);
-};
+game.load.spritesheet('rocket', 'assets/rocket.png', 8, 16);
 
 /***/ }),
 /* 19 */
@@ -1021,12 +1078,33 @@ Object.defineProperty(exports, "__esModule", {
 
 exports.default = function () {
 
-    asmallworld.update();
-    controller.update();
+    // get assets
+    __webpack_require__(17);
+    __webpack_require__(15);
+    __webpack_require__(16);
+    __webpack_require__(18);
 };
 
 /***/ }),
 /* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+exports.default = function () {
+
+    asmallworld.update();
+    controller.update();
+    scoreboard.update();
+};
+
+/***/ }),
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
