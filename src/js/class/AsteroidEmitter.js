@@ -78,11 +78,10 @@ export default class AsteroidEmitter {
             if (this.asteroidPool[i].live) {
                 if (
                     // asteroid is inside bounds
-                    //this.asteroidPool[i].y >= this.topLine - 100 &&
-                    //this.asteroidPool[i].y <= this.bottomLine + 100 &&
-                    //this.asteroidPool[i].x <= this.leftLine - 100 &&
-                    //this.asteroidPool[i].x >= this.rightLine + 100
-                    true
+                    this.asteroidPool[i].y >= this.topLine &&
+                    this.asteroidPool[i].y <= this.bottomLine &&
+                    this.asteroidPool[i].x >= this.leftLine &&
+                    this.asteroidPool[i].x <= this.rightLine
                 ) {
                     this.asteroidPool[i].update();
                 } else {
