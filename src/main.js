@@ -147,7 +147,6 @@ var Rocket = function () {
 
                 if (dist2 < 10000) {
                     scoreboard.points += Math.round(asteroidEmitter.asteroidPool[i].size * 10);
-                    scoreboard.damage += Math.round(asteroidEmitter.asteroidPool[i].size * 100);
                     this.destroy();
                     asteroidEmitter.asteroidPool[i].destroy();
                 }
@@ -1028,7 +1027,6 @@ var Scoreboard = function () {
 
         this.lastTime = null;
         this.lastPoints = null;
-        this.lastDamage = null;
         this.lastHealth = null;
 
         this.time = 0; // seconds survived
@@ -1038,11 +1036,9 @@ var Scoreboard = function () {
 
         this.textTime = game.add.text(16, 16, 'TIME: 0', { fontSize: '24px', fill: '#ffffff' });
         this.textPoints = game.add.text(16, 56, 'POINTS: 0', { fontSize: '16px', fill: '#ffffff' });
-        this.textDamage = game.add.text(16, 88, 'DAMAGE: 0', { fontSize: '16px', fill: '#ffffff' });
-        this.textHealth = game.add.text(16, 120, 'HEALTH: 10', { fontSize: '24px', fill: '#ffffff' });
+        this.textHealth = game.add.text(16, 88, 'HEALTH: 10', { fontSize: '24px', fill: '#ffffff' });
         gui.add(this.textTime);
         gui.add(this.textPoints);
-        gui.add(this.textDamage);
         gui.add(this.textHealth);
 
         this.updateCount = 0;
@@ -1058,17 +1054,32 @@ var Scoreboard = function () {
             }
 
             if (this.lastTime !== this.time) {
+                if (this.time !== 0 && this.time % 15 === 0) {
+                    if (asteroidEmitter.aliveLimit < 120) {
+                        asteroidEmitter.aliveLimit += 1;
+                    }
+                    if (asteroidEmitter.spawnTicks > 6) {
+                        asteroidEmitter.spawnTicks -= 1;
+                    }
+                    if (asteroidEmitter.minVelocity < 50) {
+                        asteroidEmitter.minVelocity += 1;
+                    }
+                    if (asteroidEmitter.maxVelocity < 200) {
+                        asteroidEmitter.maxVelocity += 2;
+                    }
+                }
                 this.lastTime = this.time;
                 this.textTime.text = 'TIME: ' + this.time;
             }
+
             if (this.lastPoints !== this.points) {
+                if (this.lastPoints < 1000 && this.points >= 1000 || this.lastPoints < 2000 && this.points >= 2000 || this.lastPoints < 4000 && this.points >= 4000 || this.lastPoints < 8000 && this.points >= 8000) {
+                    asmallworld.upgradeWeapon();
+                }
                 this.lastPoints = this.points;
                 this.textPoints.text = 'POINTS: ' + this.points;
             }
-            if (this.lastDamage !== this.damage) {
-                this.lastDamage = this.damage;
-                this.textDamage.text = 'DAMAGE: ' + this.damage;
-            }
+
             if (this.lastHealth !== this.player.health) {
                 this.lastHealth = this.player.health;
                 this.textHealth.text = 'HEALTH: ' + this.player.health;
