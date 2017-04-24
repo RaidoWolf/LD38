@@ -21,7 +21,7 @@ export default class Scoreboard {
         gui.add(this.textDamage);
         gui.add(this.textHealth);
 
-        var updateCount = 0;
+        this.updateCount = 0;
 
     }
 
