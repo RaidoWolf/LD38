@@ -15,6 +15,7 @@ export default function () {
     window.players = game.add.group();
     window.enemies = game.add.group();
     window.projectiles = game.add.group();
+    window.menu = game.add.group();
     window.gui = game.add.group();
 
     // add a starry background

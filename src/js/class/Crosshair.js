@@ -4,6 +4,8 @@ export default class Crosshair {
 
     constructor () {
 
+        console.log('slkdfjsdlkj');
+
         var self = this;
 
         // create the sprite
