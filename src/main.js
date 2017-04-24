@@ -145,7 +145,7 @@ var Rocket = function () {
             for (var i in asteroidEmitter.asteroidPool) {
                 var dist2 = Math.abs(Math.pow(this.x - asteroidEmitter.asteroidPool[i].x, 2)) + Math.abs(Math.pow(this.y - asteroidEmitter.asteroidPool[i].y, 2));
 
-                if (dist2 < Math.pow(32 * gameScaleBase * asteroidEmitter.asteroidPool[i].size, 2)) {
+                if (dist2 < Math.pow(24 * gameScaleBase * asteroidEmitter.asteroidPool[i].size, 2)) {
                     scoreboard.points += Math.round(asteroidEmitter.asteroidPool[i].size * 10);
                     this.destroy();
                     asteroidEmitter.asteroidPool[i].destroy();
@@ -306,6 +306,14 @@ var ASmallWorld = function () {
             // orbit at 60-degrees-per-second (10 RPM)
             var newPos = this.orbitalTrack.getPoint(this.orbitalPhase < 360 ? this.orbitalPhase++ : this.orbitalPhase = 0);
             this.moveTo(newPos[0], newPos[1]);
+
+            for (var i in asteroidEmitter.asteroidPool) {
+                var dist2 = Math.abs(Math.pow(this.x - asteroidEmitter.asteroidPool[i].x, 2)) + Math.abs(Math.pow(this.y - asteroidEmitter.asteroidPool[i].y, 2));
+
+                if (dist2 < Math.pow(24 * gameScaleBase * asteroidEmitter.asteroidPool[i].size, 2)) {
+                    console.log('game over');
+                }
+            }
 
             this.weapon.update();
         }
