@@ -1,4 +1,5 @@
 import Crosshair from '../../class/Crosshair.js';
+import GameOverMenu from '../../class/GameOverMenu.js';
 
 export default function create () {
 
@@ -10,5 +11,7 @@ export default function create () {
     environment.add(background);
 
     window.crosshair = new Crosshair();
+
+    window.gameOverMenu = new GameOverMenu();
 
 }
