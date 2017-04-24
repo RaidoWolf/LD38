@@ -14,7 +14,7 @@ export default class AsteroidEmitter {
         this.topLine = -500;
         this.leftLine = -500;
         this.bottomLine = game.world.height + 500;
-        this.rightLine = game.world.height + 500;
+        this.rightLine = game.world.width + 500;
 
         this.asteroidPool = [];
 
