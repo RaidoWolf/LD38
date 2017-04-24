@@ -788,11 +788,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var GameOverMenu = function GameOverMenu() {
     _classCallCheck(this, GameOverMenu);
 
-    this.backgroundBar = game.add.graphics();
-    menu.add(this.backgroundBar);
+    this.graphics = game.add.graphics();
+    menu.add(this.graphics);
 
-    this.backgroundBar.beginFill(0xff0000, 0.5);
-    this.backgroundBar.drawRect(0, game.world.height / 2 - 100, game.world.width, game.world.height / 2);
+    this.graphics.moveTo(0, game.world.height / 2 - 100);
+    this.graphics.beginFill(0xff0000, 0.5);
+    this.graphics.drawRect(0, game.world.height / 2 - 100, game.world.width, 100);
+    this.graphics.endFill();
+
+    this.graphics.moveTo(0, game.world.height / 2 + 80);
+    this.graphics.beginFill(0xffffff, 0.2);
+    this.graphics.drawRect(0, game.world.height / 2 + 80, game.world.width, 60);
+    this.graphics.endFill();
 
     this.titleText = game.add.text(0, 0, 'GAME OVER!', {
         fill: '#ffffff',
@@ -803,7 +810,7 @@ var GameOverMenu = function GameOverMenu() {
 
     this.titleText.setShadow(3, 3, 'rgba(0,0,0,0.75)', 4);
 
-    this.titleText.setTextBounds(0, game.world.height / 2 - 100, game.world.width, game.world.height / 2);
+    this.titleText.setTextBounds(0, game.world.height / 2 - 100, game.world.width, 100);
 
     menu.add(this.titleText);
 
@@ -814,15 +821,9 @@ var GameOverMenu = function GameOverMenu() {
         boundsAlignV: 'middle'
     });
 
-    this.scoreText.setTextBounds(0, game.world.height / 2, game.world.width, game.world.height / 2 + 80);
+    this.scoreText.setTextBounds(0, game.world.height / 2, game.world.width, 80);
 
     menu.add(this.scoreText);
-
-    this.helpBar = game.add.graphics();
-    menu.add(this.helpBar);
-
-    this.helpBar.beginFill(0xffffff, 0.2);
-    this.helpBar.drawRect(0, game.world.height / 2 + 80, game.world.width, game.world.height / 2 + 140);
 
     this.helpText = game.add.text(0, 0, 'click here to restart', {
         fill: '#ffffff',
@@ -831,7 +832,7 @@ var GameOverMenu = function GameOverMenu() {
         boundsAlignV: 'middle'
     });
 
-    this.helpText.setTextBounds(0, game.world.height / 2 + 80, game.world.width, game.world.height / 2 + 140);
+    this.helpText.setTextBounds(0, game.world.height / 2 + 80, game.world.width, 60);
 
     menu.add(this.helpText);
 
