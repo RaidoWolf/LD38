@@ -43,7 +43,7 @@ export default class Rocket {
         // self destruct after 10 seconds
         window.setTimeout(function () {
             self.destroy();
-        }, 10000);
+        }, 5000);
 
     }
 
