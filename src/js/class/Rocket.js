@@ -16,6 +16,8 @@ export default class Rocket {
 
     init (x, y, angle, owner) {
 
+        var self = this;
+
         this.live = true;
 
         this.sprite = game.add.sprite(x, y, 'rocket');
@@ -28,7 +30,7 @@ export default class Rocket {
         this.sprite.animations.add('default', this.frames);
         this.sprite.animations.play('default', 3, true);
 
-        this.sprite.angle = angle;
+        this.sprite.angle = angle * (180 / Math.PI);
 
         game.physics.arcade.enable(this.sprite);
         this.sprite.body.enable = true;
@@ -37,6 +39,11 @@ export default class Rocket {
         this.angle = angle;
         this.owner = owner;
         this.velocity = 50;
+
+        // self destruct after 10 seconds
+        window.setTimeout(function () {
+            self.destroy();
+        }, 10000);
 
     }
 
@@ -61,7 +68,7 @@ export default class Rocket {
     update () {
 
         if (this.velocity < 300) {
-            this.velocity += 10;
+            this.velocity += 5;
         }
 
         this.sprite.body.velocity.x =
