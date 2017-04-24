@@ -1,20 +1,20 @@
-import preload from './preload.js';
-import create from './create.js';
-import update from './update.js';
+import playingState from './state/playing.js';
+
+window.playingState = playingState;
 
 window.game = new Phaser.Game(
     window.innerWidth * window.devicePixelRatio, // game window width
     window.innerHeight * window.devicePixelRatio, // game window height
     Phaser.AUTO, // automatically choose renderer
     '', // initial DOM element (take whole window)
-    { // initial game state object
-        preload: preload,
-        create: create,
-        update: update
-    },
+    null,
     false, //disable canvas transparency
     false //disable anti-aliasing
 );
+
+game.state.add('playing', playingState);
+
+game.state.start('playing');
 
 window.largestDimension = window.innerWidth > window.innerHeight ? window.innerWidth * window.devicePixelRatio : window.innerHeight * window.devicePixelRatio;
 window.gameScaleBase = largestDimension / 800;

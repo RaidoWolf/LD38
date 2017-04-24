@@ -1,9 +1,9 @@
-import Sun from './class/Sun.js';
-import ASmallWorld from './class/ASmallWorld.js';
-import AsteroidEmitter from './class/AsteroidEmitter.js';
-import Crosshair from './class/Crosshair.js';
-import Controller from './class/Controller.js';
-import Scoreboard from './class/Scoreboard.js';
+import Sun from '../../class/Sun.js';
+import ASmallWorld from '../../class/ASmallWorld.js';
+import AsteroidEmitter from '../../class/AsteroidEmitter.js';
+import Crosshair from '../../class/Crosshair.js';
+import Controller from '../../class/Controller.js';
+import Scoreboard from '../../class/Scoreboard.js';
 
 export default function () {
 
