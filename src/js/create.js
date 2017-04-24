@@ -11,6 +11,7 @@ export default function () {
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
     window.environment = game.add.group();
+    window.solidEnvironment = game.add.group();
     window.players = game.add.group();
     window.enemies = game.add.group();
     window.projectiles = game.add.group();
