@@ -47,7 +47,7 @@ export default class RocketLauncher {
             this.cooldown = true;
             window.setTimeout(function () {
                 self.cooldown = false;
-            }, 250);
+            }, 333);
 
             return true;
 

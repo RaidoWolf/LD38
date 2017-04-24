@@ -956,7 +956,7 @@ var RocketLauncher = function () {
                 this.cooldown = true;
                 window.setTimeout(function () {
                     self.cooldown = false;
-                }, 250);
+                }, 333);
 
                 return true;
             } else {
@@ -1066,6 +1066,12 @@ var Scoreboard = function () {
                     }
                     if (asteroidEmitter.maxVelocity < 200) {
                         asteroidEmitter.maxVelocity += 2;
+                    }
+                    if (asteroidEmitter.minSize < 2) {
+                        asteroidEmitter.minSize += 0.1;
+                    }
+                    if (asteroidEmitter.maxSize < 8) {
+                        asteroidEmitter.maxSize += 0.2;
                     }
                 }
                 this.lastTime = this.time;
