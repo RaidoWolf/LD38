@@ -11,6 +11,7 @@ export default class Asteroid {
 
         this.sprite = game.add.sprite(x, y, 'asteroid');
         this.sprite.frame = Math.floor(Math.random() * 4.9999);
+        enemies.add(this.sprite);
 
         this.sprite.anchor.setTo(0.5, 0.5);
 

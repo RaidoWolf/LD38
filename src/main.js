@@ -106,6 +106,7 @@ var Rocket = function () {
             this.live = true;
 
             this.sprite = game.add.sprite(x, y, 'rocket');
+            projectiles.add(this.sprite);
 
             this.sprite.anchor.setTo(0.5, 0.5);
 
@@ -242,6 +243,7 @@ var ASmallWorld = function () {
 
         // create a sprite object
         this.sprite = game.add.sprite(x, y, 'asmallworld');
+        players.add(this.sprite);
 
         // move the anchor point to the middle
         this.sprite.anchor.setTo(0.5, 0.5);
@@ -364,6 +366,7 @@ var Asteroid = function () {
 
         this.sprite = game.add.sprite(x, y, 'asteroid');
         this.sprite.frame = Math.floor(Math.random() * 4.9999);
+        enemies.add(this.sprite);
 
         this.sprite.anchor.setTo(0.5, 0.5);
 
@@ -646,6 +649,7 @@ var Crosshair = function () {
 
         // create the sprite
         this.sprite = game.add.sprite(-100, -100, 'crosshair-normal');
+        gui.add(this.sprite);
         this.sprite.anchor.setTo(0.5, 0.5);
         this.sprite.scale.setTo(1, 1);
 
@@ -1025,6 +1029,10 @@ var Scoreboard = function () {
         this.textPoints = game.add.text(16, 56, 'POINTS: 0', { fontSize: '16px', fill: '#ffffff' });
         this.textDamage = game.add.text(16, 88, 'DAMAGE: 0', { fontSize: '16px', fill: '#ffffff' });
         this.textHealth = game.add.text(16, 120, 'HEALTH: 10', { fontSize: '24px', fill: '#ffffff' });
+        gui.add(this.textTime);
+        gui.add(this.textPoints);
+        gui.add(this.textDamage);
+        gui.add(this.textHealth);
 
         var updateCount = 0;
     }
@@ -1082,6 +1090,7 @@ var Sun = function Sun(x, y) {
     y = typeof y !== 'undefined' ? y : game.world.centerY;
 
     this.sprite = game.add.sprite(x, y, 'sun');
+    environment.add(this.sprite);
 
     this.sprite.anchor.setTo(0.5, 0.5);
     this.sprite.scale.setTo(gameScaleBase, gameScaleBase);
@@ -1153,8 +1162,15 @@ exports.default = function () {
     // start the physics system
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
+    window.environment = game.add.group();
+    window.players = game.add.group();
+    window.enemies = game.add.group();
+    window.projectiles = game.add.group();
+    window.gui = game.add.group();
+
     // add a starry background
     window.background = game.add.tileSprite(0, 0, game.world.width, game.world.height, 'space');
+    environment.add(background);
 
     // create the sun (the poorly drawn one)
     window.sun = new _Sun2.default(game.world.centerX, game.world.centerY);

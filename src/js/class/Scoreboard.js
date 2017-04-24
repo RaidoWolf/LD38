@@ -16,6 +16,10 @@ export default class Scoreboard {
         this.textPoints = game.add.text(16, 56, 'POINTS: 0', {fontSize: '16px', fill: '#ffffff'});
         this.textDamage = game.add.text(16, 88, 'DAMAGE: 0', {fontSize: '16px', fill: '#ffffff'});
         this.textHealth = game.add.text(16, 120, 'HEALTH: 10', {fontSize: '24px', fill: '#ffffff'});
+        gui.add(this.textTime);
+        gui.add(this.textPoints);
+        gui.add(this.textDamage);
+        gui.add(this.textHealth);
 
         var updateCount = 0;
 

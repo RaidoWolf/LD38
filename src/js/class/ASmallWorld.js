@@ -10,6 +10,7 @@ export default class ASmallWorld {
 
         // create a sprite object
         this.sprite = game.add.sprite(x, y, 'asmallworld');
+        players.add(this.sprite);
 
         // move the anchor point to the middle
         this.sprite.anchor.setTo(0.5, 0.5);

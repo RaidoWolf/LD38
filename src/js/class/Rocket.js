@@ -21,6 +21,7 @@ export default class Rocket {
         this.live = true;
 
         this.sprite = game.add.sprite(x, y, 'rocket');
+        projectiles.add(this.sprite);
 
         this.sprite.anchor.setTo(0.5, 0.5);
 

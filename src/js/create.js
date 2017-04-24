@@ -10,8 +10,15 @@ export default function () {
     // start the physics system
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
+    window.environment = game.add.group();
+    window.players = game.add.group();
+    window.enemies = game.add.group();
+    window.projectiles = game.add.group();
+    window.gui = game.add.group();
+
     // add a starry background
     window.background = game.add.tileSprite(0, 0, game.world.width, game.world.height, 'space');
+    environment.add(background);
 
     // create the sun (the poorly drawn one)
     window.sun = new Sun(game.world.centerX, game.world.centerY);

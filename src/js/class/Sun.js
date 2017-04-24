@@ -6,6 +6,7 @@ export default class Sun {
         y = typeof y !== 'undefined' ? y : game.world.centerY;
 
         this.sprite = game.add.sprite(x, y, 'sun');
+        environment.add(this.sprite);
 
         this.sprite.anchor.setTo(0.5, 0.5);
         this.sprite.scale.setTo(gameScaleBase, gameScaleBase);
