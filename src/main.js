@@ -274,9 +274,6 @@ var ASmallWorld = function () {
         this.orbitalOrigin = [x, y];
         this.orbitalPhase = 0;
         this.initOrbitalTrack();
-
-        this.health = 10;
-        this.maxHealth = 10;
     }
 
     _createClass(ASmallWorld, [{
@@ -1022,24 +1019,20 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Scoreboard = function () {
-    function Scoreboard(player) {
+    function Scoreboard() {
         _classCallCheck(this, Scoreboard);
 
         this.lastTime = null;
         this.lastPoints = null;
-        this.lastHealth = null;
 
         this.time = 0; // seconds survived
         this.points = 0; // arbitrary score (decreases with upgrades)
         this.damage = 0; // arbitrary damage points done in game
-        this.player = player; // this is where we get health from
 
         this.textTime = game.add.text(16, 16, 'TIME: 0', { fontSize: '24px', fill: '#ffffff' });
         this.textPoints = game.add.text(16, 56, 'POINTS: 0', { fontSize: '16px', fill: '#ffffff' });
-        this.textHealth = game.add.text(16, 88, 'HEALTH: 10', { fontSize: '24px', fill: '#ffffff' });
         gui.add(this.textTime);
         gui.add(this.textPoints);
-        gui.add(this.textHealth);
 
         this.updateCount = 0;
     }
@@ -1084,11 +1077,6 @@ var Scoreboard = function () {
                 }
                 this.lastPoints = this.points;
                 this.textPoints.text = 'POINTS: ' + this.points;
-            }
-
-            if (this.lastHealth !== this.player.health) {
-                this.lastHealth = this.player.health;
-                this.textHealth.text = 'HEALTH: ' + this.player.health;
             }
         }
     }]);
@@ -1217,7 +1205,7 @@ exports.default = function () {
     window.controller = new _Controller2.default(crosshair, asmallworld);
 
     // initialize the Scoreboard
-    window.scoreboard = new _Scoreboard2.default(asmallworld);
+    window.scoreboard = new _Scoreboard2.default();
 };
 
 var _Sun = __webpack_require__(13);
