@@ -814,7 +814,6 @@ var Explosion = function () {
         this.emitter.maxParticleSpeed.setTo(300 * this.scale * gameScaleBase, 300 * this.scale * gameScaleBase);
         this.emitter.minParticleScale = 2 * this.scale * gameScaleBase;
         this.emitter.maxParticleScale = 4 * this.scale * gameScaleBase;
-        this.emitter.angularDrag = 30;
 
         this.emitter.start(true, 500, null, 20 * this.scale);
 
