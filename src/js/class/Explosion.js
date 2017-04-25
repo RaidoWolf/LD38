@@ -6,6 +6,18 @@ export default class Explosion {
 
         this.baseDamage = baseDamage;
         this.radius = radius * gameScaleBase;
+        this.scale = (radius / 100);
+
+        this.emitter = game.add.emitter(x, y, 100);
+        this.emitter.makeParticles('explosion');
+        this.emitter.gravity = 0;
+        this.emitter.minParticleSpeed.setTo(-300 * this.scale * gameScaleBase,-300 * this.scale * gameScaleBase);
+        this.emitter.maxParticleSpeed.setTo(300 * this.scale * gameScaleBase, 300 * this.scale * gameScaleBase);
+        this.emitter.minParticleScale = 2 * this.scale * gameScaleBase;
+        this.emitter.maxParticleScale = 4 * this.scale * gameScaleBase;
+        this.emitter.angularDrag = 30;
+
+        this.emitter.start(true, 500, null, 20 * this.scale);
 
         for (var i in asteroidEmitter.asteroidPool) {
             var dist2 =
@@ -24,12 +36,15 @@ export default class Explosion {
             }
         }
 
-        this.destroy();
+        window.setTimeout(function () {
+            this.destroy();
+        }, 500);
 
     }
 
     destroy () {
 
+        this.emitter.destroy();
         this.alive = false;
 
     }
